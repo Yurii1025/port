@@ -21,11 +21,11 @@ export default class Plexus {
     this.count = 500;
 
     this.world = {
-      width: 12,
+      width: 18,
 
-      height: 8,
+      height: 12,
 
-      depth: 6,
+      depth: 10,
     };
 
     this.positions = new Float32Array(this.count * 3);
@@ -36,9 +36,14 @@ export default class Plexus {
     for (let i = 0; i < this.count; i++) {
       const i3 = i * 3;
 
-      this.positions[i3] = (Math.random() - 0.5) * this.world.width;
-      this.positions[i3 + 1] = (Math.random() - 0.5) * this.world.height;
-      this.positions[i3 + 2] = (Math.random() - 0.5) * this.world.depth;
+        this.positions[i3] =
+            this.randomDistribution() * this.world.width * 0.5;
+
+        this.positions[i3 + 1] =
+            this.randomDistribution() * this.world.height * 0.5;
+
+        this.positions[i3 + 2] =
+            this.randomDistribution() * this.world.depth * 0.5;
 
       this.velocities[i3] = (Math.random() - 0.5) * 0.004;
       this.velocities[i3 + 1] = (Math.random() - 0.5) * 0.004;
@@ -160,6 +165,12 @@ export default class Plexus {
     );
 
     scene.add(this.lines);
+  }
+
+  randomDistribution() {
+    const r = Math.random() * 2.0 - 1.0;
+
+    return r * r * r;
   }
 
   update() {
