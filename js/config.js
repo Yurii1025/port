@@ -1,6 +1,6 @@
 export default {
 
-particles:700,
+particles:100,
 
 connectionDistance:1.55,
 
@@ -14,7 +14,7 @@ spaceY:8,
 
 spaceZ:6,
 
-cameraDistance:8,
+cameraDistance:9,
 
 mouseStrength:0.75,
 

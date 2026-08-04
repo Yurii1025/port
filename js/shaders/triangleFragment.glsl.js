@@ -96,6 +96,18 @@ finalColor *= glow;
     0.45
 );
 
+float depthFade = smoothstep(
+    2.0,
+    10.0,
+    vDepth
+);
+
+alpha *= mix(
+    1.0,
+    0.35,
+    depthFade
+);
+
 
 
     gl_FragColor =

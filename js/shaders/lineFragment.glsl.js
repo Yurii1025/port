@@ -24,10 +24,19 @@ void main()
         1.0
     );
 
-gl_FragColor =
-    vec4(
-        vec3(depth),
-        vStrength * 0.18
-    );
+float depthFade = smoothstep(
+    2.0,
+    10.0,
+    vDepth
+);
+
+gl_FragColor = vec4(
+    finalColor,
+    vStrength * mix(
+        0.18,
+        0.05,
+        depthFade
+    )
+);
 }
 `;
