@@ -20,14 +20,14 @@ export default class Plexus {
   constructor(scene) {
     this.scene = scene;
 
-    this.count = 700;
+    this.count = 1000;
 
     this.world = {
-      width: 16,
+      width: 18,
 
-      height: 10,
+      height: 12,
 
-      depth: 6,
+      depth: 9,
     };
 
     this.positions = new Float32Array(this.count * 3);

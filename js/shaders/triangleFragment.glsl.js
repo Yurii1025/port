@@ -12,6 +12,7 @@ uniform float time;
 
 varying float vStrength;
 varying vec3 vWorldPosition;
+varying float vDepth;
 
 ${hashGLSL}
 
@@ -94,6 +95,8 @@ finalColor *= glow;
     0.10,
     0.45
 );
+
+
 
     gl_FragColor =
         vec4(finalColor, alpha);

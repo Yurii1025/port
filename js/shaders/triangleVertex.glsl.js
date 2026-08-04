@@ -11,6 +11,7 @@ uniform float time;
 
 varying float vStrength;
 varying vec3 vWorldPosition;
+varying float vDepth;
 
 ${hashGLSL}
 
@@ -48,13 +49,20 @@ void main()
         wave
     );
 
-    vec4 worldPosition = modelMatrix * vec4(pos, 1.0);
+    vec4 worldPosition =
+    modelMatrix *
+    vec4(pos, 1.0);
 
-    vWorldPosition = worldPosition.xyz;
+vWorldPosition = worldPosition.xyz;
 
-    gl_Position =
-        projectionMatrix *
-        viewMatrix *
-        worldPosition;
+vec4 mvPosition =
+    viewMatrix *
+    worldPosition;
+
+vDepth = -mvPosition.z;
+
+gl_Position =
+    projectionMatrix *
+    mvPosition;
 }
 `;
