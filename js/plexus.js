@@ -3,6 +3,8 @@ import { lineVertexShader } from "./shaders/lineVertex.glsl.js";
 import { lineFragmentShader } from "./shaders/lineFragment.glsl.js";
 import { triangleVertexShader } from "./shaders/triangleVertex.glsl.js";
 import { triangleFragmentShader } from "./shaders/triangleFragment.glsl.js";
+import { pointVertexShader } from "./shaders/pointVertex.glsl.js";
+import { pointFragmentShader } from "./shaders/pointFragment.glsl.js";
 
 class ConnectionGraph {
   constructor() {
@@ -18,17 +20,18 @@ export default class Plexus {
   constructor(scene) {
     this.scene = scene;
 
-    this.count = 500;
+    this.count = 700;
 
     this.world = {
-      width: 18,
+      width: 16,
 
-      height: 12,
+      height: 10,
 
-      depth: 10,
+      depth: 6,
     };
 
     this.positions = new Float32Array(this.count * 3);
+    this.sizes = new Float32Array(this.count);
     this.velocities = new Float32Array(this.count * 3);
     this.cellSize = 1.0;
     this.grid = new Map();
@@ -45,6 +48,7 @@ export default class Plexus {
         this.positions[i3 + 2] =
             this.randomDistribution() * this.world.depth * 0.5;
 
+        this.sizes[i] = 0.75 + Math.random() * 0.5;
       this.velocities[i3] = (Math.random() - 0.5) * 0.004;
       this.velocities[i3 + 1] = (Math.random() - 0.5) * 0.004;
       this.velocities[i3 + 2] = (Math.random() - 0.5) * 0.004;
@@ -57,15 +61,22 @@ export default class Plexus {
       new THREE.BufferAttribute(this.positions, 3),
     );
 
-    const material = new THREE.PointsMaterial({
-      color: 0xffffff,
-      size: 0.045,
+    this.geometry.setAttribute(
+    "size",
+    new THREE.BufferAttribute(this.sizes, 1)
+);
 
-      transparent: true,
-      opacity: 0.9,
+const material = new THREE.ShaderMaterial({
 
-      depthWrite: false,
-    });
+    vertexShader: pointVertexShader,
+
+    fragmentShader: pointFragmentShader,
+
+    transparent: true,
+
+    depthWrite: false
+
+});
 
     this.points = new THREE.Points(this.geometry, material);
 
@@ -76,7 +87,7 @@ export default class Plexus {
     // Максимум: count * maxConnections линий.
     // Каждая линия = 2 вершины = 6 float.
 
-    this.maxConnections = 4;
+    this.maxConnections = 8;
 
     const maxLines = this.count * this.maxConnections;
 
