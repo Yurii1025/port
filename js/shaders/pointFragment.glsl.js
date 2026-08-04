@@ -17,7 +17,7 @@ void main()
     float alpha =
         smoothstep(
             0.5,
-            0.35,
+            0.15,
             d
         );
 

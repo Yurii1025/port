@@ -33,8 +33,8 @@ float depthFade = smoothstep(
 gl_FragColor = vec4(
     finalColor,
     vStrength * mix(
-        0.18,
-        0.05,
+        0.30,
+        0.08,
         depthFade
     )
 );

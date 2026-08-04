@@ -14,7 +14,7 @@ renderer.setPixelRatio(
 
         window.devicePixelRatio,
 
-        2
+        1
 
     )
 
