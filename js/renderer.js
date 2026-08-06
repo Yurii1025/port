@@ -40,6 +40,17 @@ document.body.appendChild(
 
 );
 
+// setTimeout(() =>
+// {
+//     renderer.domElement.classList.add("visible");
+
+//     document
+//         .getElementById("loader")
+//         .classList
+//         .add("hide");
+
+// }, 4300);
+
 window.addEventListener(
 
     "resize",

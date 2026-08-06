@@ -1,5 +1,6 @@
 import { scene, camera } from "./scene.js";
 import { renderer } from "./renderer.js";
+import { playIntro } from "./loader.js";
 
 import {updateCamera} from "./camera.js";
 
@@ -26,4 +27,13 @@ renderer.render(
 
 }
 
-animate();
+async function start()
+{
+    await playIntro(
+        renderer.domElement
+    );
+
+    animate();
+}
+
+start();
