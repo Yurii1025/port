@@ -7,9 +7,9 @@ vec3 palette(
 )
 {
     vec3 deepColor = vec3(
-        0.03,
         0.08,
-        0.18
+        0.09,
+        0.12
     );
 
     vec3 midColor = vec3(
