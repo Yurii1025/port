@@ -1,7 +1,11 @@
 import { scene, camera } from "./scene.js";
 import { renderer } from "./renderer.js";
 import { playIntro } from "./loader.js";
-import { revealContent, initScrollEffects } from "./page.js";
+import {
+    revealContent,
+    initScrollEffects
+}
+from "./page.js";
 
 import {updateCamera} from "./camera.js";
 
