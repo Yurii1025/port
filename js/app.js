@@ -1,6 +1,7 @@
 import { scene, camera } from "./scene.js";
 import { renderer } from "./renderer.js";
 import { playIntro } from "./loader.js";
+import { revealContent, initScrollEffects } from "./page.js";
 
 import {updateCamera} from "./camera.js";
 
@@ -29,11 +30,16 @@ renderer.render(
 
 async function start()
 {
-    await playIntro(
-        renderer.domElement
-    );
+    await playIntro(renderer.domElement);
 
     animate();
+
+    initScrollEffects();
+
+    setTimeout(() =>
+    {
+        revealContent();
+    }, 2000);
 }
 
 start();
