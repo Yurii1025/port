@@ -206,12 +206,12 @@ section
 .box_container {
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column;
   position: relative;
   gap: 30px;
   margin: 0 auto;
   justify-content: center;
   align-items: center;
-  margin-top: 20%;
   z-index: 6;
 }
 .box1 {

@@ -8,24 +8,28 @@ export const renderer = new THREE.WebGLRenderer({
 
 });
 
+
 renderer.setPixelRatio(
-
-    Math.min(
-
-        window.devicePixelRatio,
-
-        1
-
-    )
-
+    Math.min(window.devicePixelRatio, 2)
 );
+// renderer.setPixelRatio(window.devicePixelRatio);
+
+// renderer.setPixelRatio(
+
+//     Math.min(
+
+//         window.devicePixelRatio,
+
+//         1
+
+//     )
+
+// );
 
 renderer.setSize(
-
     window.innerWidth,
-
-    window.innerHeight
-
+    window.innerHeight,
+    false
 );
 
 renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -51,20 +55,15 @@ document.body.appendChild(
 
 // }, 4300);
 
-window.addEventListener(
+window.addEventListener("resize", () =>
+{
+    renderer.setPixelRatio(
+        Math.min(window.devicePixelRatio, 2)
+    );
 
-    "resize",
-
-    () => {
-
-        renderer.setSize(
-
-            window.innerWidth,
-
-            window.innerHeight
-
-        );
-
-    }
-
-);
+    renderer.setSize(
+        window.innerWidth,
+        window.innerHeight,
+        false
+    );
+});
