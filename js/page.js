@@ -8,12 +8,22 @@ const sections =
 
 export function revealContent()
 {
+    const header = document.querySelector(".intro-header");
+
+    if (header)
+    {
+        header.classList.add("intro-visible");
+    }
+
     if (sections.length === 0)
     {
         return;
     }
 
-    sections[0].classList.add("active");
+    setTimeout(() =>
+    {
+        sections[0].classList.add("active");
+    }, 600);
 }
 
 export function initScrollEffects()
@@ -46,6 +56,52 @@ export function initScrollEffects()
     { passive: true }
 );
 }
+
+// function goToSection(index)
+// {
+//     if (index < 0 || index >= sections.length)
+//     {
+//         return;
+//     }
+
+//     isAnimating = true;
+
+//     const current = sections[currentIndex];
+//     const next = sections[index];
+
+//     const goingDown = index > currentIndex;
+
+//     current.classList.remove("active");
+//     current.classList.add(
+//         goingDown ? "exit-up" : "exit-down"
+//     );
+
+//     next.classList.add(
+//         goingDown
+//             ? "enter-from-bottom"
+//             : "enter-from-top"
+//     );
+
+//     requestAnimationFrame(() =>
+//     {
+//         next.classList.add("active");
+//         next.classList.remove(
+//             "enter-from-bottom",
+//             "enter-from-top"
+//         );
+//     });
+
+//     setTimeout(() =>
+//     {
+//         current.classList.remove(
+//             "exit-up",
+//             "exit-down"
+//         );
+
+//         currentIndex = index;
+//         isAnimating = false;
+//     }, 800);
+// }
 
 function goToSection(index)
 {
@@ -91,4 +147,17 @@ function goToSection(index)
         currentIndex = index;
         isAnimating = false;
     }, 800);
+}
+
+function playIntroAnimation()
+{
+    const items = document.querySelectorAll(".intro-item");
+
+    items.forEach((item, index) =>
+    {
+        setTimeout(() =>
+        {
+            item.classList.add("intro-visible");
+        }, index * 500);
+    });
 }

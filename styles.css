@@ -3,15 +3,14 @@
   padding: 0;
   box-sizing: border-box;
 }
-:root
-{
-    --scroll-progress: 0;
+:root {
+  --scroll-progress: 0;
 }
 html,
 body {
   width: 100%;
-    height: 100%;
-    overflow: hidden;
+  height: 100%;
+  overflow: hidden;
 
   background: #05070d;
 
@@ -49,13 +48,13 @@ canvas {
 
   overflow: hidden;
 
-  transition: opacity .7s ease;
+  transition: opacity 0.7s ease;
 
   z-index: 9999;
 }
 #loader.hide {
-    opacity: 0;
-    pointer-events: none;
+  opacity: 0;
+  pointer-events: none;
 }
 
 #loader-circle {
@@ -77,130 +76,137 @@ canvas {
 }
 
 @keyframes loaderExpand {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
 
-    0% {
+  70% {
+    transform: translate(-50%, -50%) scale(1);
+  }
 
-        transform:
-            translate(-50%, -50%)
-            scale(1);
-
-    }
-
-    70% {
-
-        transform:
-            translate(-50%, -50%)
-            scale(1);
-
-    }
-
-    100% {
-
-        transform:
-            translate(-50%, -50%)
-            scale(450);
-
-    }
-
+  100% {
+    transform: translate(-50%, -50%) scale(450);
+  }
 }
 
-canvas
-{
-    position: fixed;
-    inset: 0;
+canvas {
+  position: fixed;
+  inset: 0;
 
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 
-    display: block;
-    z-index: 5;
+  display: block;
+  z-index: 5;
 
-    opacity: 0;
-    transition: opacity .45s ease;
+  opacity: 0;
+  transition: opacity 0.45s ease;
 }
 
-canvas.visible
-{
-    opacity: 1;
+canvas.visible {
+  opacity: 1;
 }
 
 /*CONTENT*/
 .content {
   position: relative;
-    width: 100%;
-    height: 100vh;
-    z-index: 10;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
 }
 
-main
-{
-    position: relative;
-    z-index: 10;
+main {
+  position: relative;
+  z-index: 10;
 }
 
-section
-{
-    min-height: 100vh;
+section {
+  min-height: 100vh;
 
-    display: flex;
+  display: flex;
 
-    align-items: center;
+  align-items: center;
 
-    justify-content: center;
+  justify-content: center;
 
-    will-change:
-        transform,
-        opacity;
+  will-change: transform, opacity;
 }
 
-.reveal
-{
-    position: absolute;
-    inset: 0;
+.reveal {
+  position: absolute;
+  inset: 0;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
-    opacity: 0;
-    transform: translateY(80px);
+  opacity: 0;
+  transform: translateY(80px);
 
-    pointer-events: none;
+  pointer-events: none;
 
-    transition:
-        transform .8s ease,
-        opacity .8s ease;
+  transition:
+    transform 0.8s ease,
+    opacity 0.8s ease;
 }
 
-.reveal.active
-{
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
-.reveal.exit-up
-{
-    opacity: 0;
-    transform: translateY(-120px);
+.reveal.intro-visible {
+  animation: introReveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-.reveal.exit-down
-{
-    opacity: 0;
-    transform: translateY(120px);
+.reveal.exit-up {
+  opacity: 0;
+  transform: translateY(-120px);
 }
 
-.reveal.enter-from-bottom
-{
-    opacity: 0;
-    transform: translateY(80px);
+.reveal.exit-down {
+  opacity: 0;
+  transform: translateY(120px);
 }
 
-.reveal.enter-from-top
-{
-    opacity: 0;
-    transform: translateY(-80px);
+.reveal.enter-from-bottom {
+  opacity: 0;
+  transform: translateY(80px);
+}
+
+.reveal.enter-from-top {
+  opacity: 0;
+  transform: translateY(-80px);
+}
+
+.header {
+  padding: 10px 50px;
+  background-color: #ffffff33;
+  border-radius: 30px;
+  position: fixed;
+  top: 24px;
+  left: 45%;
+  transform: translateX(-50%);
+
+backdrop-filter: blur(2px);
+border: 1px solid rgba(255,255,255,.08);
+
+  z-index: 20;
+}
+.nav {
+}
+.list {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+}
+.list_item {
+  color: #fff;
+  text-decoration: none;
+  list-style: none;
 }
 
 .box_container {
@@ -214,39 +220,218 @@ section
   align-items: center;
   z-index: 6;
 }
-.box1 {
-  padding: 100px;
-  border-radius: 10px;
-  background: rgba(5, 9, 15, .48);
-  border: 1px solid rgba(255,255,255,.08);
 
-  backdrop-filter: blur(2px);
+/* .box2
+{
+    position: relative;
+    overflow: hidden;
 
-  box-shadow: 0 8px 30px rgba(0,0,0,.35);
+    padding: 30px 60px;
+
+    border-radius: 12px;
+
+    background:
+        radial-gradient(
+            circle at 30% 20%,
+            rgba(18, 60, 123, .40) 0%,
+            rgba(8, 18, 30, .78) 55%,
+            rgba(0, 4, 9, .92) 100%
+        );
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    backdrop-filter: blur(2px);
+
+    box-shadow: 0 8px 30px rgba(0,0,0,.35);
+} */
+
+/* .box2
+{
+    position: relative;
+    overflow: hidden;
+
+    padding: 70px 90px;
+
+    border-radius: 12px;
+
+    background:
+        radial-gradient(
+            circle at 30% 20%,
+            rgba(18, 60, 123, .40) 0%,
+            rgba(8, 18, 30, .78) 55%,
+            rgba(0, 4, 9, .92) 100%
+        );
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    backdrop-filter: blur(2px);
+
+    box-shadow: 0 8px 30px rgba(0,0,0,.35);
 }
+
+.box2::after
+{
+    content: "";
+
+    position: absolute;
+    inset: -1px;
+
+    border-radius: inherit;
+    padding: 1px;
+
+    background:
+        conic-gradient(
+            from 0deg,
+            transparent 0deg,
+            transparent 320deg,
+            rgba(255,255,255,.9) 340deg,
+            rgba(180,220,255,.8) 350deg,
+            transparent 360deg
+        );
+
+    mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+
+    mask-composite: exclude;
+
+    animation: borderOrbit 8s linear infinite;
+}
+
+@keyframes borderOrbit
+{
+    to
+    {
+        transform: rotate(360deg);
+    }
+} */
+
 .box2 {
-  padding: 100px;
-  border-radius: 10px;
-  background:
-radial-gradient(
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+
+  padding: 50px 80px;
+
+  background: radial-gradient(
     circle at 30% 20%,
-    rgba(18, 60, 123, .40) 0%,
-    rgba(8, 18, 30, .78) 55%,
-    rgba(0, 4, 9, .92) 100%
-);
+    rgba(18, 60, 123, 0.4) 0%,
+    rgba(8, 18, 30, 0.78) 55%,
+    rgba(0, 4, 9, 0.92) 100%
+  );
 
-  border: 1.3px solid rgba(255,255,255,.08);
-
+  border: 1.3px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
 
-  box-shadow: 0 8px 30px rgba(0,0,0,.35);
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+
+.box2::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: inherit;
+  padding: 1px;
+
+  background: conic-gradient(
+    from var(--angle),
+    transparent 0deg,
+    transparent 310deg,
+    rgba(255, 255, 255, 0) 320deg,
+    rgba(255, 255, 255, 0.6) 330deg,
+    rgba(255, 255, 255, 1) 340deg,
+    rgba(255, 255, 255, 0.6) 350deg,
+    transparent 360deg
+  );
+  /* background:
+        conic-gradient(
+            from var(--angle),
+            transparent 0deg,
+            transparent 330deg,
+            rgba(255,255,255,0.0) 336deg,
+            rgba(255,255,255,0.35) 344deg,
+            rgba(220,235,255,0.9) 350deg,
+            rgba(255,255,255,0.35) 356deg,
+            transparent 360deg
+        ); */
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  animation: borderSweep 9s linear infinite;
+
+  pointer-events: none;
+}
+
+@property --angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes borderSweep {
+  to {
+    --angle: 360deg;
+  }
 }
 .box2:hover {
-    box-shadow: inset 0 0 50px rgba(30,90,180,.18);
-}
-.box1:hover {
-  box-shadow: inset 0 0 50px rgba(30,90,180,.18);
+  border-color: rgba(255, 255, 255, 0.244);
+  transform: translateY(-4px);
+
+  box-shadow:
+    6px 8px 18px -6px rgba(0, 0, 0, 0.35),
+    12px 16px 32px -10px rgba(30, 120, 255, 0.18);
 }
 .box_text {
   color: #fff;
+}
+
+.intro-item {
+  opacity: 0;
+}
+
+.intro-item.intro-visible {
+  animation: introReveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes introReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.intro-header {
+  opacity: 0;
+  transform: scale(0.92) translateY(-20px);
+}
+
+.intro-header.intro-visible {
+  animation: introReveal 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes introReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
