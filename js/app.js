@@ -16,6 +16,7 @@ import HeroSphere from "./heroSphere.js";
 const plexus=new Plexus(scene);
 
 const heroSphere = new HeroSphere(scene);
+window.heroSphere = heroSphere;
 
 
 function animate(){

@@ -33,6 +33,46 @@ export default class HeroSphere {
 
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
 
+    this.positions = positions;
+this.spherePositions = positions.slice();
+this.networkPositions = new Float32Array(positions.length);
+
+this.morphProgress = 0;
+this.targetMorph = 0;
+
+// галактика
+const arms = 5;
+const galaxyRadius = 1.3;
+
+for (let i = 0; i < count; i++) {
+
+    // больше точек в центре
+    const t = Math.pow(Math.random(), 0.6);
+
+    const r = t * galaxyRadius;
+
+    // выбор рукава
+    const arm = Math.floor(Math.random() * arms);
+
+    // угол спирали
+    const angle =
+        r * 5.2 +
+        (arm / arms) * Math.PI * 2 +
+        (Math.random() - 0.5) * 0.35;
+
+    // небольшой шум
+    const noise = (Math.random() - 0.5) * 0.05;
+
+    this.networkPositions[i * 3] =
+        Math.cos(angle) * r + Math.cos(angle * 2) * noise;
+
+    this.networkPositions[i * 3 + 1] =
+        (Math.random() - 0.5) * 0.12;
+
+    this.networkPositions[i * 3 + 2] =
+        Math.sin(angle) * r + Math.sin(angle * 2) * noise;
+}
+
     this.material = new THREE.PointsMaterial({
       color: 0xffffff,
 
@@ -94,6 +134,9 @@ export default class HeroSphere {
 
     this.group.add(this.points);
 
+    this.group.rotation.x = -0.65;
+    this.group.rotation.y = 0.75;
+
     this.group.position.set(0, 0, -0.5);
 
     // this.offsetX = 3.1;
@@ -126,6 +169,14 @@ export default class HeroSphere {
     this.targetScale = 0.85;
   }
 
+  toSphere() {
+  this.targetMorph = 0;
+}
+
+toNetwork() {
+  this.targetMorph = 1;
+}
+
   update() {
     const hero = document.querySelector(".hero_container");
 
@@ -153,15 +204,49 @@ export default class HeroSphere {
     this.opacity += (this.targetOpacity - this.opacity) * 0.04;
     this.scale += (this.targetScale - this.scale) * 0.04;
 
+    this.morphProgress +=
+  (this.targetMorph - this.morphProgress) * 0.035;
+
+//   // плавная смена цвета ядра
+// const galaxyColor = new THREE.Color(0xffd66b);
+// const sphereColor = new THREE.Color(0x2a4f8f);
+
+// this.innerMaterial.color.copy(sphereColor).lerp(galaxyColor, this.morphProgress);
+
+const pos = this.points.geometry.attributes.position.array;
+
+for (let i = 0; i < pos.length; i++) {
+  pos[i] =
+    this.spherePositions[i] * (1 - this.morphProgress) +
+    this.networkPositions[i] * this.morphProgress;
+}
+
+this.points.geometry.attributes.position.needsUpdate = true;
+
+if (this.morphProgress > 0.7) {
+
+    const pulse =
+        1 +
+        Math.sin(performance.now() * 0.0012) * 0.025;
+
+    this.group.scale.setScalar(this.scale * pulse);
+}
+
     this.material.opacity = this.opacity;
-    this.innerMaterial.opacity = this.opacity * 0.55;
+    // ядро исчезает при превращении в галактику
+this.innerMaterial.opacity =
+    this.opacity * 0.55 * (1 - this.morphProgress);
 
     const pulse = 1 + Math.sin(performance.now() * 0.0003) * 0.015;
 
     this.group.scale.setScalar(this.scale * pulse);
 
-    this.points.rotation.y += 0.0008;
-    this.points.rotation.x += 0.0002;
+    const galaxySpeed =
+    0.0008 +
+    this.morphProgress * 0.0014;
+
+this.points.rotation.y += galaxySpeed;
+this.points.rotation.x += 0.00015;
 
     this.innerPoints.rotation.y -= 0.0013;
     this.innerPoints.rotation.x += 0.0005;
