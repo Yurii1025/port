@@ -11,7 +11,11 @@ import {updateCamera} from "./camera.js";
 
 import Plexus from "./plexus.js";
 
+import HeroSphere from "./heroSphere.js";
+
 const plexus=new Plexus(scene);
+
+const heroSphere = new HeroSphere(scene);
 
 
 function animate(){
@@ -29,6 +33,7 @@ renderer.render(
     camera
 
 );
+heroSphere.update();
 
 }
 
@@ -41,9 +46,12 @@ async function start()
     initScrollEffects();
 
     setTimeout(() =>
-    {
-        revealContent();
-    }, 2000);
+{
+    revealContent();
+
+    heroSphere.show();
+
+}, 2000);
 }
 
 start();
