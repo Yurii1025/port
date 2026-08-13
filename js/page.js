@@ -1,172 +1,110 @@
 let currentIndex = 0;
 let isAnimating = false;
 
-const sections =
-    Array.from(
-        document.querySelectorAll(".reveal")
-    );
+let sphere = null;
 
-export function revealContent()
-{
-    const header = document.querySelector(".intro-header");
+const sections = Array.from(document.querySelectorAll(".reveal"));
 
-    if (header)
-    {
-        header.classList.add("intro-visible");
-    }
+export function revealContent() {
+  const header = document.querySelector(".intro-header");
 
-    if (sections.length === 0)
-    {
-        return;
-    }
+  if (header) {
+    header.classList.add("intro-visible");
+  }
 
-    setTimeout(() =>
-    {
-        sections[0].classList.add("active");
-    }, 600);
+  if (sections.length === 0) {
+    return;
+  }
+
+  setTimeout(() => {
+    sections[0].classList.add("active");
+  }, 600);
 }
 
-export function initScrollEffects(heroSphere)
-{
-    let scrollAccumulator = 0;
-    const scrollThreshold = 200;
+export function initScrollEffects(heroSphere) {
+  sphere = heroSphere;
+  let scrollAccumulator = 0;
+  const scrollThreshold = 200;
 
-    window.addEventListener(
+  window.addEventListener(
     "wheel",
-    event =>
-    {
-        if (isAnimating)
-        {
-            return;
-        }
-
-        scrollAccumulator += event.deltaY;
-
-        if (scrollAccumulator >= scrollThreshold)
-        {
-            scrollAccumulator = 0;
-            goToSection(currentIndex + 1);
-        }
-        else if (scrollAccumulator <= -scrollThreshold)
-        {
-            scrollAccumulator = 0;
-            goToSection(currentIndex - 1);
-        }
-    },
-    { passive: true }
-);
-}
-
-// function goToSection(index)
-// {
-//     if (index < 0 || index >= sections.length)
-//     {
-//         return;
-//     }
-
-//     isAnimating = true;
-
-//     const current = sections[currentIndex];
-//     const next = sections[index];
-
-//     const goingDown = index > currentIndex;
-
-//     current.classList.remove("active");
-//     current.classList.add(
-//         goingDown ? "exit-up" : "exit-down"
-//     );
-
-//     next.classList.add(
-//         goingDown
-//             ? "enter-from-bottom"
-//             : "enter-from-top"
-//     );
-
-//     requestAnimationFrame(() =>
-//     {
-//         next.classList.add("active");
-//         next.classList.remove(
-//             "enter-from-bottom",
-//             "enter-from-top"
-//         );
-//     });
-
-//     setTimeout(() =>
-//     {
-//         current.classList.remove(
-//             "exit-up",
-//             "exit-down"
-//         );
-
-//         currentIndex = index;
-//         isAnimating = false;
-//     }, 800);
-// }
-
-function goToSection(index)
-{
-    if (index < 0 || index >= sections.length)
-    {
+    (event) => {
+      if (isAnimating) {
         return;
-    }
+      }
 
-    isAnimating = true;
+      scrollAccumulator += event.deltaY;
 
-    const current = sections[currentIndex];
-    const next = sections[index];
+      if (scrollAccumulator >= scrollThreshold) {
+        scrollAccumulator = 0;
+        goToSection(currentIndex + 1);
+      } else if (scrollAccumulator <= -scrollThreshold) {
+        scrollAccumulator = 0;
+        goToSection(currentIndex - 1);
+      }
+    },
+    { passive: true },
+  );
+}
 
-    const goingDown = index > currentIndex;
+function goToSection(index) {
+  if (index < 0 || index >= sections.length) {
+    return;
+  }
 
-    // --- трансформация сферы ---
+  isAnimating = true;
+
+  const current = sections[currentIndex];
+  const next = sections[index];
+
+  const goingDown = index > currentIndex;
+
+// --- трансформация объекта ---
+
+// 1 → 2 экран (сфера → галактика)
 if (currentIndex === 0 && index === 1) {
-    heroSphere.toNetwork();
+  sphere.toNetwork();
 }
 
+// 2 → 1 экран (галактика → сфера)
 if (currentIndex === 1 && index === 0) {
-    heroSphere.toSphere();
+  sphere.toSphere();
 }
 
-    current.classList.remove("active");
-    current.classList.add(
-        goingDown ? "exit-up" : "exit-down"
-    );
-
-    next.classList.add(
-        goingDown
-            ? "enter-from-bottom"
-            : "enter-from-top"
-    );
-
-    requestAnimationFrame(() =>
-    {
-        next.classList.add("active");
-        next.classList.remove(
-            "enter-from-bottom",
-            "enter-from-top"
-        );
-    });
-
-    setTimeout(() =>
-    {
-        current.classList.remove(
-            "exit-up",
-            "exit-down"
-        );
-
-        currentIndex = index;
-        isAnimating = false;
-    }, 800);
+// 2 → 3 экран (галактика → солнечная система)
+if (currentIndex === 1 && index === 2) {
+  sphere.toSolarSystem();
 }
 
-function playIntroAnimation()
-{
-    const items = document.querySelectorAll(".intro-item");
+// 3 → 2 экран (солнечная система → галактика)
+if (currentIndex === 2 && index === 1) {
+  sphere.fromSolarSystem();
+}
 
-    items.forEach((item, index) =>
-    {
-        setTimeout(() =>
-        {
-            item.classList.add("intro-visible");
-        }, index * 500);
-    });
+  current.classList.remove("active");
+  current.classList.add(goingDown ? "exit-up" : "exit-down");
+
+  next.classList.add(goingDown ? "enter-from-bottom" : "enter-from-top");
+
+  requestAnimationFrame(() => {
+    next.classList.add("active");
+    next.classList.remove("enter-from-bottom", "enter-from-top");
+  });
+
+  setTimeout(() => {
+    current.classList.remove("exit-up", "exit-down");
+
+    currentIndex = index;
+    isAnimating = false;
+  }, 800);
+}
+
+function playIntroAnimation() {
+  const items = document.querySelectorAll(".intro-item");
+
+  items.forEach((item, index) => {
+    setTimeout(() => {
+      item.classList.add("intro-visible");
+    }, index * 500);
+  });
 }

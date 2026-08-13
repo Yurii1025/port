@@ -3,11 +3,11 @@ import { scene, camera } from "./scene.js";
 import { renderer } from "./renderer.js";
 import { playIntro } from "./loader.js";
 import { revealContent, initScrollEffects } from "./page.js";
-import {updateCamera} from "./camera.js";
+import { updateCamera } from "./camera.js";
 import Plexus from "./plexus.js";
 import HeroSphere from "./heroSphere.js";
 
-const plexus=new Plexus(scene);
+const plexus = new Plexus(scene);
 
 const heroSphere = new HeroSphere(scene);
 window.heroSphere = heroSphere;
@@ -15,56 +15,48 @@ window.heroSphere = heroSphere;
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-
 window.addEventListener("mousemove", (event) => {
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 });
 
-function animate(){
+function animate() {
+  requestAnimationFrame(animate);
 
-requestAnimationFrame(animate);
+  updateCamera(camera);
 
-updateCamera(camera);
+  plexus.update();
 
-plexus.update();
-
-renderer.render(
-
+  renderer.render(
     scene,
 
-    camera
+    camera,
+  );
+  heroSphere.update();
 
-);
-heroSphere.update();
+  raycaster.setFromCamera(mouse, camera);
 
-raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObject(heroSphere.points);
 
-const intersects = raycaster.intersectObject(heroSphere.points);
-
-if (intersects.length > 0) {
+  if (intersects.length > 0) {
     heroSphere.onHover();
-} else {
+  } else {
     heroSphere.onLeave();
+  }
 }
 
-}
+async function start() {
+  await playIntro(renderer.domElement);
 
-async function start()
-{
-    await playIntro(renderer.domElement);
+  animate();
 
-    animate();
+  initScrollEffects(heroSphere);
 
-    initScrollEffects(heroSphere);
-
-    setTimeout(() =>
-{
+  setTimeout(() => {
     revealContent();
 
     heroSphere.show();
-
-}, 2000);
+  }, 2000);
 }
 
 start();
