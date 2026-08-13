@@ -34,9 +34,13 @@ function animate() {
   );
   heroSphere.update();
 
+
   raycaster.setFromCamera(mouse, camera);
 
-  const intersects = raycaster.intersectObject(heroSphere.points);
+// уменьшили область наведения
+raycaster.params.Points.threshold = 0.08;
+
+const intersects = raycaster.intersectObject(heroSphere.points);
 
   if (intersects.length > 0) {
     heroSphere.onHover();
