@@ -167,6 +167,10 @@ this.targetY = this.heroPosition.y;
 
     this.scale = 0.8;
     this.targetScale = 0.8;
+
+    // hover
+    this.hover = 0;
+    this.targetHover = 0;
   }
 
   show() {
@@ -178,6 +182,14 @@ this.targetY = this.heroPosition.y;
     this.targetOpacity = 0;
     this.targetScale = 0.85;
   }
+
+  onHover() {
+    this.targetHover = 1;
+}
+
+onLeave() {
+    this.targetHover = 0;
+}
 
 toSphere() {
     this.targetMorph = 0;
@@ -196,6 +208,7 @@ toNetwork() {
 }
 
   update() {
+    this.hover += (this.targetHover - this.hover) * 0.08;
     const hero = document.querySelector(".hero_container");
 
     if (hero) {
@@ -255,25 +268,37 @@ this.points.geometry.attributes.position.needsUpdate = true;
 
 if (this.morphProgress > 0.7) {
 
-    const pulse =
-        1 +
-        Math.sin(performance.now() * 0.0012) * 0.025;
+    const pulse = 1 + Math.sin(performance.now() * 0.0012) * 0.025;
 
     this.group.scale.setScalar(this.scale * pulse);
 }
 
     this.material.opacity = this.opacity;
     // ядро исчезает при превращении в галактику
-this.innerMaterial.opacity =
+    // this.innerMaterial.opacity =
+    // this.opacity * 0.55 * (1 - this.morphProgress);
+    // this.material.opacity = this.opacity * (1 + this.hover * 0.25);
+    const baseColor = new THREE.Color(0xffffff);
+    const hoverColor = new THREE.Color(0xd8ecff);
+
+    this.material.color.copy(baseColor).lerp(hoverColor, this.hover);
+
+    this.material.opacity = this.opacity;
+    this.innerMaterial.opacity =
     this.opacity * 0.55 * (1 - this.morphProgress);
 
     const pulse = 1 + Math.sin(performance.now() * 0.0003) * 0.015;
 
-    this.group.scale.setScalar(this.scale * pulse);
+const hoverScale = 1 + this.hover * 0.18;
+
+this.group.scale.setScalar(
+    this.scale * pulse * hoverScale
+);
 
     const galaxySpeed =
-    0.0008 +
-    this.morphProgress * 0.0014;
+    (0.0008 +
+    this.morphProgress * 0.0014) *
+    (1 + this.hover * 0.6);
 
 this.points.rotation.y += galaxySpeed;
 this.points.rotation.x += 0.00015;

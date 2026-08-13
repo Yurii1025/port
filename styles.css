@@ -134,11 +134,12 @@ section {
 
 .reveal {
   position: absolute;
-  /* inset: 0; */
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
 
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
 
   opacity: 0;
@@ -475,9 +476,8 @@ margin-left: 40px;
 }
 /*HERO SECTION*/
 .hero {
-  /* justify-content: flex-start;
-  padding-left: 6vw; */
-  margin-left: 7%;
+  justify-content: flex-start;
+  padding-left: 7%;
 }
 .hero_container {
     position: relative;
@@ -669,29 +669,153 @@ margin-left: 40px;
 
 /*ABOUT*/
 .about-item {
+  justify-content: flex-end;
+  padding-right: 7%;
 }
 .hero_container {
 }
 .about_container {
-  position: relative;
-  display: flex;
-  justify-content: center;
+  /* width: min(980px, 88vw); */
+  width: 45%;
+  background: radial-gradient(
+        circle at 20% 35%,
+        rgba(18, 60, 123, .40) 0%,
+        rgba(3, 14, 28, 0.78) 55%,
+        rgba(0, 4, 9, .92) 100%
+    );
+    margin-top: 40px;
 }
 .about_content {
+  display: flex;
+  flex-direction: column;
 }
 .about_top-part {
 }
-.top_text {
+.top_part-content {
+
+}
+.top_page-name {
+  color: #66b4f6;
+  margin-bottom: 23px;
+}
+.top_head1 {
+  color: #66b4f6;
+  font-size: 36px;
+  margin-bottom: 5px;
+}
+.top_head2 {
+  color: #f9f9f9;
+  font-size: 36px;
+  margin-bottom: 35px;
+}
+.about_text {
+  color: #94a0b5;
+  font-size: 18px;
+  margin-bottom: 30px;
+}
+.about_text2 {
+  color: #94a0b5;
+  font-size: 18px;
+}
+.bottom_part {
+}
+.journey {
+  color: #66b4f6;
+  font-size: 18px;
+  margin-bottom: 20px;
+  margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+
+    width: 100%;
+    margin-bottom: 36px;
+}
+.journey::before,
+.journey::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+
+    background: linear-gradient(
+        to right,
+        rgba(255,255,255,0.05),
+        rgba(120,180,255,0.25),
+        rgba(255,255,255,0.05)
+    );
+}
+
+.journey::after {
+    background: linear-gradient(
+        to left,
+        rgba(255,255,255,0.05),
+        rgba(120,180,255,0.25),
+        rgba(255,255,255,0.05)
+    );
+}
+.bottom_container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.bot_item {
+  display: flex;
+  gap: 10px;
+}
+.bot_icon {
+}
+.bot_text {
+}
+.bt-1 {
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+.bt-2 {
+  color: #94a0b5;
+}
+
+/*SKILLS*/
+.reveal {
+}
+.skills-item {
+  justify-content: flex-start;
+  padding-left: 7%;
+}
+.hero_container {
+}
+.skills_container {
+  width: 45%;
+  background: radial-gradient(
+        circle at 35% 40%,
+        rgba(0, 4, 9, .92) 0%,
+        rgba(11, 25, 43, 0.78) 55%,
+        rgba(18, 60, 123, .40) 100%
+    );
+}
+.about_content {
+}
+.skills_content {
+}
+.about_top-part {
+}
+.skills_top-part {
+}
+.top_part-content {
 }
 .top_page-name {
 }
-.top_text1 {
+.top_head1 {
 }
-.top_text2 {
+.top_head2 {
 }
-.hero_text {
+.skills_span {
 }
-.about_text2 {
+.about_text {
 }
 .bottom_part {
 }
