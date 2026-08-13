@@ -44,7 +44,7 @@ async function start()
 
     animate();
 
-    initScrollEffects();
+    initScrollEffects(heroSphere);
 
     setTimeout(() =>
 {

@@ -26,7 +26,7 @@ export function revealContent()
     }, 600);
 }
 
-export function initScrollEffects()
+export function initScrollEffects(heroSphere)
 {
     let scrollAccumulator = 0;
     const scrollThreshold = 200;
@@ -116,6 +116,15 @@ function goToSection(index)
     const next = sections[index];
 
     const goingDown = index > currentIndex;
+
+    // --- трансформация сферы ---
+if (currentIndex === 0 && index === 1) {
+    heroSphere.toNetwork();
+}
+
+if (currentIndex === 1 && index === 0) {
+    heroSphere.toSphere();
+}
 
     current.classList.remove("active");
     current.classList.add(

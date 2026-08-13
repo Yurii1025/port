@@ -139,13 +139,23 @@ for (let i = 0; i < count; i++) {
 
     this.group.position.set(0, 0, -0.5);
 
-    // this.offsetX = 3.1;
-    // this.offsetY = 0.0;
-    this.offsetX = 3.6;
-    this.offsetY = 0.0;
 
-    this.currentX = this.offsetX;
-    this.currentY = this.offsetY;
+    // this.offsetX = 3.6;
+    // this.offsetY = 0.0;
+
+    // this.currentX = this.offsetX;
+    // this.currentY = this.offsetY;
+
+    // позиции объекта на разных экранах
+this.heroPosition = { x: 3.6, y: 0.0 };
+this.aboutPosition = { x: -2.8, y: -0.2 };
+
+// текущая и целевая позиции
+this.currentX = this.heroPosition.x;
+this.currentY = this.heroPosition.y;
+
+this.targetX = this.heroPosition.x;
+this.targetY = this.heroPosition.y;
 
     this.group.scale.setScalar(1.18);
     this.targetScale = 1.18;
@@ -169,12 +179,20 @@ for (let i = 0; i < count; i++) {
     this.targetScale = 0.85;
   }
 
-  toSphere() {
-  this.targetMorph = 0;
+toSphere() {
+    this.targetMorph = 0;
+    this.targetScale = 1.08;
+
+    this.targetX = this.heroPosition.x;
+    this.targetY = this.heroPosition.y;
 }
 
 toNetwork() {
-  this.targetMorph = 1;
+    this.targetMorph = 1;
+    this.targetScale = 0.82;
+
+    this.targetX = this.aboutPosition.x;
+    this.targetY = this.aboutPosition.y;
 }
 
   update() {
@@ -191,11 +209,23 @@ toNetwork() {
         -(rect.top + rect.height * 0.5 - window.innerHeight / 2) /
         (window.innerHeight / 2);
 
-      const targetX = x * 3 + this.offsetX;
-      const targetY = y * 1.8 + this.offsetY;
+      // const targetX = x * 3 + this.offsetX;
+      // const targetY = y * 1.8 + this.offsetY;
 
-      this.currentX += (targetX - this.currentX) * 0.025;
-      this.currentY += (targetY - this.currentY) * 0.025;
+      // this.currentX += (targetX - this.currentX) * 0.025;
+      // this.currentY += (targetY - this.currentY) * 0.025;
+
+      // небольшое следование за героем только на первом экране
+const heroFollowX = x * 0.6;
+const heroFollowY = y * 0.4;
+
+// итоговая цель
+const targetX = this.targetX + heroFollowX * (1 - this.morphProgress);
+const targetY = this.targetY + heroFollowY * (1 - this.morphProgress);
+
+// плавное движение
+this.currentX += (targetX - this.currentX) * 0.018;
+this.currentY += (targetY - this.currentY) * 0.018;
 
       this.group.position.x = this.currentX;
       this.group.position.y = this.currentY;

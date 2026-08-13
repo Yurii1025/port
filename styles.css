@@ -666,3 +666,46 @@ margin-left: 40px;
   z-index: 20;
   pointer-events: none;
 }
+
+/*ABOUT*/
+.about-item {
+}
+.hero_container {
+}
+.about_container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.about_content {
+}
+.about_top-part {
+}
+.top_text {
+}
+.top_page-name {
+}
+.top_text1 {
+}
+.top_text2 {
+}
+.hero_text {
+}
+.about_text2 {
+}
+.bottom_part {
+}
+.journey {
+}
+.bottom_container {
+}
+.bot_item {
+}
+.bot_icon {
+}
+.bot_text {
+}
+.bt-1 {
+}
+.bt-2 {
+}
