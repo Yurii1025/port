@@ -16,9 +16,23 @@ export function revealContent() {
     return;
   }
 
+  // setTimeout(() => {
+  //   sections[0].classList.add("active");
+  // }, 600);
+//   setTimeout(() => {
+//   sections[0].classList.add("active");
+
+//   setTimeout(() => {
+//     playIntroAnimation();
+//   }, 250);
+// }, 600);
+setTimeout(() => {
+  sections[0].classList.add("active");
+
   setTimeout(() => {
-    sections[0].classList.add("active");
-  }, 600);
+    playIntroAnimation(sections[0]);
+  }, 250);
+}, 600);
 }
 
 export function initScrollEffects(heroSphere) {
@@ -86,10 +100,18 @@ if (currentIndex === 2 && index === 1) {
 
   next.classList.add(goingDown ? "enter-from-bottom" : "enter-from-top");
 
+  // requestAnimationFrame(() => {
+  //   next.classList.add("active");
+  //   next.classList.remove("enter-from-bottom", "enter-from-top");
+  // });
   requestAnimationFrame(() => {
-    next.classList.add("active");
-    next.classList.remove("enter-from-bottom", "enter-from-top");
-  });
+  next.classList.add("active");
+  next.classList.remove("enter-from-bottom", "enter-from-top");
+
+  setTimeout(() => {
+    playIntroAnimation(next);
+  }, 200);
+});
 
   setTimeout(() => {
     current.classList.remove("exit-up", "exit-down");
@@ -99,12 +121,47 @@ if (currentIndex === 2 && index === 1) {
   }, 800);
 }
 
-function playIntroAnimation() {
-  const items = document.querySelectorAll(".intro-item");
+// function playIntroAnimation() {
+//   const items = document.querySelectorAll(".intro-item");
+
+//   items.forEach((item, index) => {
+//     setTimeout(() => {
+//       item.classList.add("intro-visible");
+//     }, index * 500);
+//   });
+// }
+// function playIntroAnimation() {
+//   const items = document.querySelectorAll(".hero .intro-item");
+
+//   items.forEach((item, index) => {
+//     setTimeout(() => {
+//       item.classList.add("intro-visible");
+//     }, index * 140);
+//   });
+// }
+/*Анимация работает при скроле в обе стороны*/
+// function playIntroAnimation(section) {
+//   const items = section.querySelectorAll(".intro-item");
+
+//   items.forEach((item, index) => {
+//     item.classList.remove("intro-visible");
+
+//     setTimeout(() => {
+//       item.classList.add("intro-visible");
+//     }, index * 140);
+//   });
+// }
+/*Анимация работает при скроле в оодну сторону*/
+function playIntroAnimation(section) {
+  if (section.dataset.animated === "true") return;
+
+  section.dataset.animated = "true";
+
+  const items = section.querySelectorAll(".intro-item");
 
   items.forEach((item, index) => {
     setTimeout(() => {
       item.classList.add("intro-visible");
-    }, index * 500);
+    }, index * 120);
   });
 }
