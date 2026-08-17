@@ -981,7 +981,7 @@ margin-left: 40px;
 .top_head2 {
   color: #f9f9f9;
   font-size: 36px;
-  margin-bottom: 35px;
+  margin-bottom: 25px;
   text-shadow: 1.5px 1.5px 10px rgba(119, 190, 248, 0.589);
 }
 .about_text {
@@ -1116,6 +1116,8 @@ margin-left: 40px;
 .hero_container {
 }
 .skills_container {
+  margin-top: 40px;
+  padding: 36px 36px 26px 36px;
   width: 45%;
   background: radial-gradient(
         circle at 35% 40%,
@@ -1147,12 +1149,17 @@ margin-left: 40px;
   color: #66b4f6;
   text-shadow: 1.5px 1.5px 10px rgba(119, 190, 248, 0.589);
 }
-.about_text {
+.skills_text {
   color: #bcc3d0;
+  margin-bottom: 0px;
 }
 .bottom_part {
 }
 .journey {
+}
+.skills_cont-name {
+  margin-top: 15px;
+  margin-bottom: 35px;
 }
 .intro-item {
 }
