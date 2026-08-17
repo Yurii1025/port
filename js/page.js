@@ -74,26 +74,63 @@ function goToSection(index) {
   const goingDown = index > currentIndex;
 
 // --- трансформация объекта ---
-
-// 1 → 2 экран (сфера → галактика)
+// 1 → 2
 if (currentIndex === 0 && index === 1) {
   sphere.toNetwork();
 }
 
-// 2 → 1 экран (галактика → сфера)
+// 2 → 1
 if (currentIndex === 1 && index === 0) {
   sphere.toSphere();
 }
 
-// 2 → 3 экран (галактика → солнечная система)
+// 2 → 3
 if (currentIndex === 1 && index === 2) {
   sphere.toSolarSystem();
 }
 
-// 3 → 2 экран (солнечная система → галактика)
+// 3 → 2
 if (currentIndex === 2 && index === 1) {
-  sphere.fromSolarSystem();
+  sphere.toNetwork();
 }
+
+// 3 → 4
+if (currentIndex === 2 && index === 3) {
+  sphere.toSun();
+}
+
+// 4 → 3
+if (currentIndex === 3 && index === 2) {
+  sphere.toSolarSystem();
+}
+// // 1 → 2 экран (сфера → галактика)
+// if (currentIndex === 0 && index === 1) {
+//   sphere.toNetwork();
+// }
+
+// // 2 → 1 экран (галактика → сфера)
+// if (currentIndex === 1 && index === 0) {
+//   sphere.toSphere();
+// }
+
+// // 2 → 3 экран (галактика → солнечная система)
+// if (currentIndex === 1 && index === 2) {
+//   sphere.toSolarSystem();
+// }
+
+// // 3 → 2 экран (солнечная система → галактика)
+// if (currentIndex === 2 && index === 1) {
+//   sphere.toNetwork();
+// }
+
+// // 3 → 4 экран (солнечная система → солнце)
+// if (currentIndex === 2 && index === 3) {
+//   sphere.toSun();
+// }
+// // 4 → 3 экран (солнце → солнечная система)
+// if (currentIndex === 3 && index === 2) {
+//   sphere.toSolarSystem();
+// }
 
   current.classList.remove("active");
   current.classList.add(goingDown ? "exit-up" : "exit-down");

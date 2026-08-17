@@ -36,14 +36,19 @@ export default class HeroSphere {
     this.spherePositions = positions.slice();
     this.networkPositions = new Float32Array(positions.length);
 
-   this.solarPositions = new Float32Array(positions.length);
+    this.solarPositions = new Float32Array(positions.length);
 
-this.solarProgress = 0;
-this.targetSolar = 0;
+    this.sunPositions = new Float32Array(positions.length);
+    this.sunPhases = new Float32Array(count);
+
+    this.solarProgress = 0;
+    this.targetSolar = 0;
+
+    this.sunProgress = 0;
+    this.targetSun = 0;
 
     this.morphProgress = 0;
     this.targetMorph = 0;
-
 
     // галактика
     const arms = 5;
@@ -74,85 +79,134 @@ this.targetSolar = 0;
         Math.sin(angle) * r + Math.sin(angle * 2) * noise;
     }
 
-// ---------- SOLAR SYSTEM ----------
+    // ---------- SOLAR SYSTEM ----------
 
-const orbitRadii = [0.65, 0.95, 1.28];
-const planetAngles = [0.3, 2.1, 4.0];
+    const orbitRadii = [0.65, 0.95, 1.28];
+    const planetAngles = [0.3, 2.1, 4.0];
 
-let index = 0;
+    let index = 0;
 
-// орбиты
-for (let orbit = 0; orbit < orbitRadii.length; orbit++) {
-  const radius = orbitRadii[orbit];
+    // орбиты
+    for (let orbit = 0; orbit < orbitRadii.length; orbit++) {
+      const radius = orbitRadii[orbit];
 
-  for (let i = 0; i < 220; i++) {
-    const angle = (i / 360) * Math.PI * 2;
+      for (let i = 0; i < 220; i++) {
+        const angle = (i / 360) * Math.PI * 2;
 
-    this.solarPositions[index++] = Math.cos(angle) * radius;
-    this.solarPositions[index++] = (Math.random() - 0.5) * 0.008;
-    this.solarPositions[index++] = Math.sin(angle) * radius;
-  }
-}
+        this.solarPositions[index++] = Math.cos(angle) * radius;
+        this.solarPositions[index++] = (Math.random() - 0.5) * 0.008;
+        this.solarPositions[index++] = Math.sin(angle) * radius;
+      }
+    }
 
-// три планеты
-const planetRadius = 0.08;
-const planetPointCount = 120;
+    // три планеты
+    const planetRadius = 0.08;
+    const planetPointCount = 120;
 
-for (let p = 0; p < 3; p++) {
-  const orbitRadius = orbitRadii[p];
-  const centerAngle = planetAngles[p];
+    for (let p = 0; p < 3; p++) {
+      const orbitRadius = orbitRadii[p];
+      const centerAngle = planetAngles[p];
 
-  // центр планеты на орбите
-  const cx = Math.cos(centerAngle) * orbitRadius;
-  const cy = 0;
-  const cz = Math.sin(centerAngle) * orbitRadius;
+      // центр планеты на орбите
+      const cx = Math.cos(centerAngle) * orbitRadius;
+      const cy = 0;
+      const cz = Math.sin(centerAngle) * orbitRadius;
 
-  for (let i = 0; i < planetPointCount; i++) {
-    const u = Math.random();
-    const v = Math.random();
+      for (let i = 0; i < planetPointCount; i++) {
+        const u = Math.random();
+        const v = Math.random();
 
-    const theta = 2 * Math.PI * u;
-    const phi = Math.acos(2 * v - 1);
+        const theta = 2 * Math.PI * u;
+        const phi = Math.acos(2 * v - 1);
 
-    const r = planetRadius * Math.pow(Math.random(), 0.35);
+        const r = planetRadius * Math.pow(Math.random(), 0.35);
 
-    this.solarPositions[index++] =
-      cx + r * Math.sin(phi) * Math.cos(theta);
+        this.solarPositions[index++] = cx + r * Math.sin(phi) * Math.cos(theta);
 
-    this.solarPositions[index++] =
-      cy + r * Math.cos(phi);
+        this.solarPositions[index++] = cy + r * Math.cos(phi);
 
-    this.solarPositions[index++] =
-      cz + r * Math.sin(phi) * Math.sin(theta);
-  }
-}
+        this.solarPositions[index++] = cz + r * Math.sin(phi) * Math.sin(theta);
+      }
+    }
 
-// если точки ещё остались — распределяем по орбитам
-while (index < this.solarPositions.length) {
-  const orbit = Math.floor(Math.random() * orbitRadii.length);
-  const radius = orbitRadii[orbit];
-  const angle = Math.random() * Math.PI * 2;
+    // если точки ещё остались — распределяем по орбитам
+    while (index < this.solarPositions.length) {
+      const orbit = Math.floor(Math.random() * orbitRadii.length);
+      const radius = orbitRadii[orbit];
+      const angle = Math.random() * Math.PI * 2;
 
-  this.solarPositions[index++] = Math.cos(angle) * radius;
-  this.solarPositions[index++] = (Math.random() - 0.5) * 0.008;
-  this.solarPositions[index++] = Math.sin(angle) * radius;
-}
+      this.solarPositions[index++] = Math.cos(angle) * radius;
+      this.solarPositions[index++] = (Math.random() - 0.5) * 0.008;
+      this.solarPositions[index++] = Math.sin(angle) * radius;
+    }
+    // // ---------- SUN ----------
 
-this.material = new THREE.PointsMaterial({
-  color: 0xffffff,
-  size: 0.016,
-  transparent: true,
-  opacity: 0,
-  depthWrite: false,
-});
+    // const sunRadius = 0.96;
 
-this.points = new THREE.Points(geometry, this.material);
+    // for (let i = 0; i < count; i++) {
+    //   const u = Math.random();
+    //   const v = Math.random();
+
+    //   const theta = 2 * Math.PI * u;
+    //   const phi = Math.acos(2 * v - 1);
+
+    //   // плотное облако внутри шара
+    //   const r = sunRadius * Math.pow(Math.random(), 0.45);
+
+    //   this.sunPositions[i * 3] =
+    //     r * Math.sin(phi) * Math.cos(theta);
+
+    //   this.sunPositions[i * 3 + 1] =
+    //     r * Math.cos(phi);
+
+    //   this.sunPositions[i * 3 + 2] =
+    //     r * Math.sin(phi) * Math.sin(theta);
+
+    //   this.sunPhases[i] = Math.random() * Math.PI * 2;
+    // }
+    // ---------- SUN ----------
+
+    const sunRadius = 0.85;
+
+    for (let i = 0; i < count; i++) {
+      const u = Math.random();
+      const v = Math.random();
+
+      const theta = 2 * Math.PI * u;
+      const phi = Math.acos(2 * v - 1);
+
+      // Плотная внешняя оболочка Солнца
+      const shell = Math.pow(Math.random(), 0.35);
+
+      const r = sunRadius * (0.72 + shell * 0.28);
+
+      this.sunPositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+
+      this.sunPositions[i * 3 + 1] = r * Math.cos(phi);
+
+      this.sunPositions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
+
+      this.sunPhases[i] = Math.random() * Math.PI * 2;
+    }
+
+    this.material = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.016,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+    });
+
+    this.points = new THREE.Points(geometry, this.material);
 
     // внутреннее ядро
     const innerCount = 420;
     const innerRadius = 0.18;
 
-    const innerPositions = new Float32Array(innerCount * 3);
+const innerPositions = new Float32Array(innerCount * 3);
+
+this.sunCorePositions = new Float32Array(innerCount * 3);
+this.sunCorePhases = new Float32Array(innerCount);
 
     for (let i = 0; i < innerCount; i++) {
       const u = Math.random();
@@ -170,7 +224,30 @@ this.points = new THREE.Points(geometry, this.material);
       innerPositions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
     }
 
-    
+    this.innerPositions = innerPositions.slice();
+
+    // ---------- SUN CORE ----------
+
+    const coreRadius = 0.7;
+
+    for (let i = 0; i < innerCount; i++) {
+      const u = Math.random();
+      const v = Math.random();
+
+      const theta = 2 * Math.PI * u;
+      const phi = Math.acos(2 * v - 1);
+
+      // плотное центральное облако
+      const r = coreRadius * Math.pow(Math.random(), 0.55);
+
+      this.sunCorePositions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+
+      this.sunCorePositions[i * 3 + 1] = r * Math.cos(phi);
+
+      this.sunCorePositions[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
+
+      this.sunCorePhases[i] = Math.random() * Math.PI * 2;
+    }
 
     const innerGeometry = new THREE.BufferGeometry();
 
@@ -182,7 +259,7 @@ this.points = new THREE.Points(geometry, this.material);
     this.innerMaterial = new THREE.PointsMaterial({
       color: 0x2a4f8f,
 
-      size: 0.022,
+      size: 0.024,
 
       transparent: true,
 
@@ -211,6 +288,7 @@ this.points = new THREE.Points(geometry, this.material);
     this.heroPosition = { x: 3.6, y: 0.0 };
     this.aboutPosition = { x: -2.8, y: -0.2 };
     this.skillsPosition = { x: 3.1, y: -0.15 };
+    this.worksPosition = { x: 0.0, y: -2.5 };
 
     // текущая и целевая позиции
     this.currentX = this.heroPosition.x;
@@ -255,35 +333,52 @@ this.points = new THREE.Points(geometry, this.material);
 
   toSphere() {
     this.targetMorph = 0;
+    this.targetSolar = 0;
+    this.targetSun = 0;
+
     this.targetScale = 1.08;
 
     this.targetX = this.heroPosition.x;
     this.targetY = this.heroPosition.y;
-    this.innerMaterial.color.set(0x2a4f8f);
   }
 
   toNetwork() {
     this.targetMorph = 1;
+    this.targetSolar = 0;
+    this.targetSun = 0;
+
     this.targetScale = 0.82;
 
     this.targetX = this.aboutPosition.x;
     this.targetY = this.aboutPosition.y;
   }
-toSolarSystem() {
-  this.targetSolar = 1;
-  this.targetScale = 0.75;
+  toSolarSystem() {
+    this.targetSun = 0;
+    this.targetSolar = 1;
 
-  this.targetX = this.skillsPosition.x;
-  this.targetY = this.skillsPosition.y;
-  this.innerMaterial.color.set(0xffd45c);
-}
+    this.targetScale = 0.75;
 
-fromSolarSystem() {
-  this.targetSolar = 0;
+    this.targetX = this.skillsPosition.x;
+    this.targetY = this.skillsPosition.y;
+  }
 
-  this.targetX = this.aboutPosition.x;
-  this.targetY = this.aboutPosition.y;
-}
+  toSun() {
+    this.targetSolar = 1;
+    this.targetSun = 1;
+
+    this.targetScale = 0.42;
+
+    this.targetX = this.worksPosition.x;
+    this.targetY = this.worksPosition.y;
+  }
+
+  // fromSolarSystem() {
+  //   this.targetSolar = 0;
+  //   this.targetSun = 0;
+
+  //   this.targetX = this.aboutPosition.x;
+  //   this.targetY = this.aboutPosition.y;
+  // }
 
   update() {
     this.hover += (this.targetHover - this.hover) * 0.08;
@@ -327,8 +422,27 @@ fromSolarSystem() {
 
     this.morphProgress += (this.targetMorph - this.morphProgress) * 0.035;
 
-    this.solarProgress +=
-  (this.targetSolar - this.solarProgress) * 0.04;
+    this.solarProgress += (this.targetSolar - this.solarProgress) * 0.04;
+
+    // Солнце возвращается быстрее, чем формируется,
+    // чтобы к моменту окончания перехода 4 → 3
+    // ядро уже вернулось в компактное состояние.
+    const sunSpeed = this.targetSun < this.sunProgress ? 0.12 : 0.04;
+
+    this.sunProgress += (this.targetSun - this.sunProgress) * sunSpeed;
+
+    // Полностью фиксируем состояние,
+    // когда почти достигли цели.
+    if (Math.abs(this.sunProgress - this.targetSun) < 0.005) {
+      this.sunProgress = this.targetSun;
+    }
+    //   this.morphProgress += (this.targetMorph - this.morphProgress) * 0.035;
+
+    //   this.solarProgress +=
+    // (this.targetSolar - this.solarProgress) * 0.04;
+
+    // this.sunProgress +=
+    // (this.targetSun - this.sunProgress) * 0.04;
 
     //   // плавная смена цвета ядра
     // const galaxyColor = new THREE.Color(0xffd66b);
@@ -336,6 +450,17 @@ fromSolarSystem() {
 
     // this.innerMaterial.color.copy(sphereColor).lerp(galaxyColor, this.morphProgress);
 
+    //   const pos = this.points.geometry.attributes.position.array;
+
+    //   for (let i = 0; i < pos.length; i++) {
+    //     const galaxy =
+    //       this.spherePositions[i] * (1 - this.morphProgress) +
+    //       this.networkPositions[i] * this.morphProgress;
+
+    //     pos[i] =
+    // galaxy * (1 - this.solarProgress) +
+    // this.solarPositions[i] * this.solarProgress;
+    //   }
     const pos = this.points.geometry.attributes.position.array;
 
     for (let i = 0; i < pos.length; i++) {
@@ -343,12 +468,78 @@ fromSolarSystem() {
         this.spherePositions[i] * (1 - this.morphProgress) +
         this.networkPositions[i] * this.morphProgress;
 
+      const solar =
+        galaxy * (1 - this.solarProgress) +
+        this.solarPositions[i] * this.solarProgress;
+
+      const pointIndex = Math.floor(i / 3);
+      const phase = this.sunPhases[pointIndex];
+
+      const time = performance.now() * 0.00035;
+
+      const movementX = Math.sin(time + phase) * 0.018 * this.sunProgress;
+
+      const movementY =
+        Math.cos(time * 0.9 + phase * 1.7) * 0.018 * this.sunProgress;
+
+      const movementZ =
+        Math.sin(time * 0.75 + phase * 2.3) * 0.018 * this.sunProgress;
+      // const movementX =
+      //   Math.sin(time + phase) * 0.012 * this.sunProgress;
+
+      // const movementY =
+      //   Math.cos(time * 0.9 + phase * 1.7) * 0.012 * this.sunProgress;
+
+      // const movementZ =
+      //   Math.sin(time * 0.75 + phase * 2.3) * 0.012 * this.sunProgress;
+
       pos[i] =
-  galaxy * (1 - this.solarProgress) +
-  this.solarPositions[i] * this.solarProgress;
+        solar * (1 - this.sunProgress) +
+        (this.sunPositions[i] +
+          (i % 3 === 0 ? movementX : i % 3 === 1 ? movementY : movementZ)) *
+          this.sunProgress;
     }
 
     this.points.geometry.attributes.position.needsUpdate = true;
+
+    // ---------- SUN CORE ANIMATION ----------
+
+    const corePos = this.innerPoints.geometry.attributes.position.array;
+
+    const coreTime = performance.now() * 0.00045;
+
+    for (let i = 0; i < corePos.length; i++) {
+      const pointIndex = Math.floor(i / 3);
+      const phase = this.sunCorePhases[pointIndex];
+
+      const coreMovementX =
+        Math.sin(coreTime + phase) * 0.025 * this.sunProgress;
+
+      const coreMovementY =
+        Math.cos(coreTime * 1.1 + phase * 1.4) * 0.025 * this.sunProgress;
+
+      const coreMovementZ =
+        Math.sin(coreTime * 0.8 + phase * 2.1) * 0.025 * this.sunProgress;
+
+      const targetX = this.sunCorePositions[i];
+
+      const targetY = this.sunCorePositions[i + 1];
+
+      const targetZ = this.sunCorePositions[i + 2];
+
+      const movement =
+        i % 3 === 0
+          ? coreMovementX
+          : i % 3 === 1
+            ? coreMovementY
+            : coreMovementZ;
+
+      corePos[i] =
+        this.innerPositions[i] * (1 - this.sunProgress) +
+        (this.sunCorePositions[i] + movement) * this.sunProgress;
+    }
+
+    this.innerPoints.geometry.attributes.position.needsUpdate = true;
 
     if (this.morphProgress > 0.7) {
       const pulse = 1 + Math.sin(performance.now() * 0.0012) * 0.025;
@@ -364,20 +555,18 @@ fromSolarSystem() {
     const sphereColor = new THREE.Color(0xffffff);
     const solarColor = new THREE.Color(0xffe37a);
 
-    const currentColor = sphereColor
-  .clone()
-  .lerp(solarColor, this.solarProgress);
+    const currentColor = sphereColor.clone().lerp(solarColor, this.sunProgress);
 
-    this.material.color.set(0xffffff);
+    this.material.color.copy(currentColor);
+    // this.material.color.set(0xffffff);
 
     this.material.opacity = this.opacity;
     this.innerMaterial.opacity =
-  this.opacity *
-  (1 - this.morphProgress + this.solarProgress * 0.8);
+      this.opacity * (1 - this.morphProgress + this.solarProgress * 0.8);
 
-this.innerMaterial.color
-  .set(0x2a4f8f)
-  .lerp(new THREE.Color(0xffd45a), this.solarProgress);
+    this.innerMaterial.color
+      .set(0x2a4f8f)
+      .lerp(new THREE.Color(0xffd45a), this.solarProgress);
 
     const pulse = 1 + Math.sin(performance.now() * 0.0003) * 0.015;
 
@@ -389,7 +578,7 @@ this.innerMaterial.color
       (0.0008 + this.morphProgress * 0.0014) * (1 + this.hover * 0.6);
 
     this.points.rotation.y += galaxySpeed;
-    
+
     this.points.rotation.x += 0.00025;
     this.points.rotation.z += 0.00012;
 
