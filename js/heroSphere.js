@@ -166,7 +166,7 @@ export default class HeroSphere {
     // }
     // ---------- SUN ----------
 
-    const sunRadius = 0.85;
+    const sunRadius = 1;
 
     for (let i = 0; i < count; i++) {
       const u = Math.random();
@@ -203,10 +203,10 @@ export default class HeroSphere {
     const innerCount = 420;
     const innerRadius = 0.18;
 
-const innerPositions = new Float32Array(innerCount * 3);
+    const innerPositions = new Float32Array(innerCount * 3);
 
-this.sunCorePositions = new Float32Array(innerCount * 3);
-this.sunCorePhases = new Float32Array(innerCount);
+    this.sunCorePositions = new Float32Array(innerCount * 3);
+    this.sunCorePhases = new Float32Array(innerCount);
 
     for (let i = 0; i < innerCount; i++) {
       const u = Math.random();
@@ -228,7 +228,7 @@ this.sunCorePhases = new Float32Array(innerCount);
 
     // ---------- SUN CORE ----------
 
-    const coreRadius = 0.7;
+    const coreRadius = 0.8;
 
     for (let i = 0; i < innerCount; i++) {
       const u = Math.random();
@@ -259,7 +259,7 @@ this.sunCorePhases = new Float32Array(innerCount);
     this.innerMaterial = new THREE.PointsMaterial({
       color: 0x2a4f8f,
 
-      size: 0.024,
+      size: 0.022,
 
       transparent: true,
 
@@ -475,7 +475,8 @@ this.sunCorePhases = new Float32Array(innerCount);
       const pointIndex = Math.floor(i / 3);
       const phase = this.sunPhases[pointIndex];
 
-      const time = performance.now() * 0.00035;
+      // const time = performance.now() * 0.00035;
+      const time = performance.now() * 0.001;
 
       const movementX = Math.sin(time + phase) * 0.018 * this.sunProgress;
 
@@ -568,21 +569,56 @@ this.sunCorePhases = new Float32Array(innerCount);
       .set(0x2a4f8f)
       .lerp(new THREE.Color(0xffd45a), this.solarProgress);
 
+    // const pulse = 1 + Math.sin(performance.now() * 0.0003) * 0.015;
+
+    // const hoverScale = 1 + this.hover * 0.18;
+
+    // this.group.scale.setScalar(this.scale * pulse * hoverScale);
+
+    // // const galaxySpeed =
+    // //   (0.0008 + this.morphProgress * 0.0014) * (1 + this.hover * 0.6);
+
+    // // this.points.rotation.y += galaxySpeed;
+    // // const galaxySpeed =
+    // //   (0.0008 + this.morphProgress * 0.0014) * (1 + this.hover * 0.6);
+    // const galaxySpeed =
+    //   (0.0008 + this.morphProgress * 0.0014) * (1 + this.hover * 0.6);
+
+    // const sunRotationBoost = 1 + this.sunProgress * 2.5;
+
+    // this.points.rotation.y += galaxySpeed * sunRotationBoost;
+
+    // this.points.rotation.y += galaxySpeed * sunRotationBoost;
+
+    // this.points.rotation.x += 0.00025;
+    // this.points.rotation.z += 0.00012;
+
+    // // this.innerPoints.rotation.y -= 0.0013;
+    // // this.innerPoints.rotation.x += 0.0005;
+    // const coreRotationBoost = 1 + this.sunProgress * 2.5;
+
+    // this.innerPoints.rotation.y -= 0.0013 * coreRotationBoost;
+    // this.innerPoints.rotation.x += 0.0005 * coreRotationBoost;
     const pulse = 1 + Math.sin(performance.now() * 0.0003) * 0.015;
 
-    const hoverScale = 1 + this.hover * 0.18;
+const hoverScale = 1 + this.hover * 0.18;
 
-    this.group.scale.setScalar(this.scale * pulse * hoverScale);
+this.group.scale.setScalar(this.scale * pulse * hoverScale);
 
-    const galaxySpeed =
-      (0.0008 + this.morphProgress * 0.0014) * (1 + this.hover * 0.6);
+const galaxySpeed =
+  (0.0008 + this.morphProgress * 0.0014) *
+  (1 + this.hover * 0.6);
 
-    this.points.rotation.y += galaxySpeed;
+const sunRotationBoost = 1 + this.sunProgress * 2.5;
 
-    this.points.rotation.x += 0.00025;
-    this.points.rotation.z += 0.00012;
+this.points.rotation.y += galaxySpeed * sunRotationBoost;
 
-    this.innerPoints.rotation.y -= 0.0013;
-    this.innerPoints.rotation.x += 0.0005;
+this.points.rotation.x += 0.00025;
+this.points.rotation.z += 0.00012;
+
+const coreRotationBoost = 1 + this.sunProgress * 2.5;
+
+this.innerPoints.rotation.y -= 0.0013 * coreRotationBoost;
+this.innerPoints.rotation.x += 0.0005 * coreRotationBoost;
   }
 }
