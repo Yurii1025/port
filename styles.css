@@ -1309,3 +1309,53 @@ margin-left: 40px;
 .hint_span {
   color: #008ef4;
 }
+
+/*WORKS SECTION*/
+.reveal {
+}
+.about-item {
+}
+.projects_section {
+  justify-content: center;
+  width: 100%;
+  align-items: flex-start;
+  margin-top: 90px;
+  min-height: auto;
+}
+.hero_container {
+}
+.projects_container {
+  width: 80%;
+}
+.about_content {
+}
+.about_top-part {
+}
+.top_part-content {
+}
+.top_page-name {
+}
+.intro-item {
+}
+.top_head2 {
+}
+.about_text {
+}
+.bottom_part {
+}
+.journey {
+}
+.bottom_container {
+}
+.bot_item {
+}
+.bot_icon_container {
+}
+.bot_icon {
+}
+.bot_text {
+}
+.bt-1 {
+}
+.bt-2 {
+}
