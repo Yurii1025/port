@@ -19,20 +19,20 @@ export function revealContent() {
   // setTimeout(() => {
   //   sections[0].classList.add("active");
   // }, 600);
-//   setTimeout(() => {
-//   sections[0].classList.add("active");
+  //   setTimeout(() => {
+  //   sections[0].classList.add("active");
 
-//   setTimeout(() => {
-//     playIntroAnimation();
-//   }, 250);
-// }, 600);
-setTimeout(() => {
-  sections[0].classList.add("active");
-
+  //   setTimeout(() => {
+  //     playIntroAnimation();
+  //   }, 250);
+  // }, 600);
   setTimeout(() => {
-    playIntroAnimation(sections[0]);
-  }, 250);
-}, 600);
+    sections[0].classList.add("active");
+
+    setTimeout(() => {
+      playIntroAnimation(sections[0]);
+    }, 250);
+  }, 600);
 }
 
 export function initScrollEffects(heroSphere) {
@@ -73,64 +73,73 @@ function goToSection(index) {
 
   const goingDown = index > currentIndex;
 
-// --- трансформация объекта ---
-// 1 → 2
-if (currentIndex === 0 && index === 1) {
-  sphere.toNetwork();
-}
+  // --- трансформация объекта ---
+  // 1 → 2
+  if (currentIndex === 0 && index === 1) {
+    sphere.toNetwork();
+  }
 
-// 2 → 1
-if (currentIndex === 1 && index === 0) {
-  sphere.toSphere();
-}
+  // 2 → 1
+  if (currentIndex === 1 && index === 0) {
+    sphere.toSphere();
+  }
 
-// 2 → 3
-if (currentIndex === 1 && index === 2) {
-  sphere.toSolarSystem();
-}
+  // 2 → 3
+  if (currentIndex === 1 && index === 2) {
+    sphere.toSolarSystem();
+  }
 
-// 3 → 2
-if (currentIndex === 2 && index === 1) {
-  sphere.toNetwork();
-}
+  // 3 → 2
+  if (currentIndex === 2 && index === 1) {
+    sphere.toNetwork();
+  }
 
-// 3 → 4
-if (currentIndex === 2 && index === 3) {
-  sphere.toSun();
-}
+  // 3 → 4
+  if (currentIndex === 2 && index === 3) {
+    sphere.toSun();
+  }
 
-// 4 → 3
-if (currentIndex === 3 && index === 2) {
-  sphere.toSolarSystem();
-}
-// // 1 → 2 экран (сфера → галактика)
-// if (currentIndex === 0 && index === 1) {
-//   sphere.toNetwork();
-// }
+  // 4 → 3
+  if (currentIndex === 3 && index === 2) {
+    sphere.toSolarSystem();
+  }
+  // 4 → 5
+  if (currentIndex === 3 && index === 4) {
+    sphere.toBlackHole();
+  }
 
-// // 2 → 1 экран (галактика → сфера)
-// if (currentIndex === 1 && index === 0) {
-//   sphere.toSphere();
-// }
+  // 5 → 4
+  if (currentIndex === 4 && index === 3) {
+    sphere.toSun();
+  }
+  // // 1 → 2 экран (сфера → галактика)
+  // if (currentIndex === 0 && index === 1) {
+  //   sphere.toNetwork();
+  // }
 
-// // 2 → 3 экран (галактика → солнечная система)
-// if (currentIndex === 1 && index === 2) {
-//   sphere.toSolarSystem();
-// }
+  // // 2 → 1 экран (галактика → сфера)
+  // if (currentIndex === 1 && index === 0) {
+  //   sphere.toSphere();
+  // }
 
-// // 3 → 2 экран (солнечная система → галактика)
-// if (currentIndex === 2 && index === 1) {
-//   sphere.toNetwork();
-// }
+  // // 2 → 3 экран (галактика → солнечная система)
+  // if (currentIndex === 1 && index === 2) {
+  //   sphere.toSolarSystem();
+  // }
 
-// // 3 → 4 экран (солнечная система → солнце)
-// if (currentIndex === 2 && index === 3) {
-//   sphere.toSun();
-// }
-// // 4 → 3 экран (солнце → солнечная система)
-// if (currentIndex === 3 && index === 2) {
-//   sphere.toSolarSystem();
-// }
+  // // 3 → 2 экран (солнечная система → галактика)
+  // if (currentIndex === 2 && index === 1) {
+  //   sphere.toNetwork();
+  // }
+
+  // // 3 → 4 экран (солнечная система → солнце)
+  // if (currentIndex === 2 && index === 3) {
+  //   sphere.toSun();
+  // }
+  // // 4 → 3 экран (солнце → солнечная система)
+  // if (currentIndex === 3 && index === 2) {
+  //   sphere.toSolarSystem();
+  // }
 
   current.classList.remove("active");
   current.classList.add(goingDown ? "exit-up" : "exit-down");
@@ -142,13 +151,13 @@ if (currentIndex === 3 && index === 2) {
   //   next.classList.remove("enter-from-bottom", "enter-from-top");
   // });
   requestAnimationFrame(() => {
-  next.classList.add("active");
-  next.classList.remove("enter-from-bottom", "enter-from-top");
+    next.classList.add("active");
+    next.classList.remove("enter-from-bottom", "enter-from-top");
 
-  setTimeout(() => {
-    playIntroAnimation(next);
-  }, 200);
-});
+    setTimeout(() => {
+      playIntroAnimation(next);
+    }, 200);
+  });
 
   setTimeout(() => {
     current.classList.remove("exit-up", "exit-down");
