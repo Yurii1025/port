@@ -32,6 +32,20 @@ export default class HeroSphere {
 
     geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
 
+    // Цвет каждой отдельной точки.
+    const pointColors = new Float32Array(count * 3);
+
+    for (let i = 0; i < count; i++) {
+      pointColors[i * 3] = 1;
+      pointColors[i * 3 + 1] = 1;
+      pointColors[i * 3 + 2] = 1;
+    }
+
+    geometry.setAttribute("color", new THREE.BufferAttribute(pointColors, 3));
+    // const geometry = new THREE.BufferGeometry();
+
+    // geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
     this.positions = positions;
     this.spherePositions = positions.slice();
     this.networkPositions = new Float32Array(positions.length);
@@ -194,32 +208,65 @@ export default class HeroSphere {
 
     // ---------- BLACK HOLE ----------
 
-    this.blackHolePositions = new Float32Array(positions.length);
+    // 0 = black core
+    // 1 = accretion disk
+
+    this.blackHoleRoles = new Uint8Array(count);
+
+    this.blackHoleCorePositions = new Float32Array(positions.length);
+
+    this.blackHoleRadii = new Float32Array(count);
+
+    this.blackHoleAngles = new Float32Array(count);
+
+    this.blackHoleSpeeds = new Float32Array(count);
+
     this.blackHolePhases = new Float32Array(count);
 
-    const blackHoleInnerRadius = 0.42;
-const blackHoleOuterRadius = 1.35;
+    const blackCoreRatio = 0.48;
+const blackCoreRadius = 0.28;
+
+    const diskInnerRadius = 0.34;
+const diskOuterRadius = 1.35;
 
     for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
+      const isCore = Math.random() < blackCoreRatio;
 
-      const radius =
-        blackHoleInnerRadius +
-        Math.pow(Math.random(), 0.65) *
-          (blackHoleOuterRadius - blackHoleInnerRadius);
-
-      const thickness =
-  (Math.random() - 0.5) *
-  0.12 *
-  (1 - radius / blackHoleOuterRadius);
-
-      this.blackHolePositions[i * 3] = Math.cos(angle) * radius;
-
-      this.blackHolePositions[i * 3 + 1] = thickness;
-
-      this.blackHolePositions[i * 3 + 2] = Math.sin(angle) * radius;
+      this.blackHoleRoles[i] = isCore ? 0 : 1;
 
       this.blackHolePhases[i] = Math.random() * Math.PI * 2;
+
+      if (isCore) {
+        // Плотное сферическое облако
+        // вокруг будущего event horizon.
+
+        const u = Math.random();
+        const v = Math.random();
+
+        const theta = 2 * Math.PI * u;
+
+        const phi = Math.acos(2 * v - 1);
+
+        const r = blackCoreRadius * Math.pow(Math.random(), 0.35);
+
+        this.blackHoleCorePositions[i * 3] =
+          r * Math.sin(phi) * Math.cos(theta);
+
+        this.blackHoleCorePositions[i * 3 + 1] = r * Math.cos(phi);
+
+        this.blackHoleCorePositions[i * 3 + 2] =
+          r * Math.sin(phi) * Math.sin(theta);
+      } else {
+        // Параметры аккреционного диска.
+
+        this.blackHoleRadii[i] =
+          diskInnerRadius +
+          Math.pow(Math.random(), 0.65) * (diskOuterRadius - diskInnerRadius);
+
+        this.blackHoleAngles[i] = Math.random() * Math.PI * 2;
+
+        this.blackHoleSpeeds[i] = 0.45 + Math.random() * 0.65;
+      }
     }
 
     this.material = new THREE.PointsMaterial({
@@ -228,6 +275,7 @@ const blackHoleOuterRadius = 1.35;
       transparent: true,
       opacity: 0,
       depthWrite: false,
+      vertexColors: true,
     });
 
     this.points = new THREE.Points(geometry, this.material);
@@ -409,16 +457,18 @@ const blackHoleOuterRadius = 1.35;
     this.targetY = this.worksPosition.y;
   }
 
-  toBlackHole() {
-    this.targetSolar = 1;
-    this.targetSun = 1;
-    this.targetBlackHole = 1;
+toBlackHole() {
+  this.targetSolar = 1;
+  this.targetSun = 1;
+  this.targetBlackHole = 1;
 
-    this.targetScale = 0.62;
+  this.targetScale = 0.72;
 
-    this.targetX = this.worksPosition.x;
-    this.targetY = this.worksPosition.y;
-  }
+  // Black Hole — отдельная композиция аутро.
+  // Не используем позицию 4-го экрана.
+  this.targetX = 0.0;
+  this.targetY = 0.0;
+}
 
   // fromSolarSystem() {
   //   this.targetSolar = 0;
@@ -485,10 +535,13 @@ const blackHoleOuterRadius = 1.35;
     // ---------- BLACK HOLE ----------
 
     const blackHoleSpeed =
-      this.targetBlackHole > this.blackHoleProgress ? 0.08 : 0.1;
+  this.targetBlackHole > this.blackHoleProgress
+    ? 0.012
+    : 0.06;
 
-    this.blackHoleProgress +=
-      (this.targetBlackHole - this.blackHoleProgress) * blackHoleSpeed;
+this.blackHoleProgress +=
+  (this.targetBlackHole - this.blackHoleProgress) *
+  blackHoleSpeed;
 
     if (Math.abs(this.blackHoleProgress - this.targetBlackHole) < 0.005) {
       this.blackHoleProgress = this.targetBlackHole;
@@ -577,89 +630,309 @@ const blackHoleOuterRadius = 1.35;
 
     // this.points.geometry.attributes.position.needsUpdate = true;
 
-    const pos = this.points.geometry.attributes.position.array;
+const pos =
+  this.points.geometry.attributes.position.array;
 
-    const collapseProgress = THREE.MathUtils.smoothstep(
-      this.blackHoleProgress,
-      0.0,
-      0.55,
-    );
+const pointColors =
+  this.points.geometry.attributes.color.array;
 
-    const diskProgress = THREE.MathUtils.smoothstep(
-      this.blackHoleProgress,
+// ---------- BLACK HOLE SHAPE ----------
+
+const blackCoreProgress =
+  THREE.MathUtils.smoothstep(
+    this.blackHoleProgress,
+    0.12,
+    0.72,
+  );
+
+const diskProgress =
+  THREE.MathUtils.smoothstep(
+    this.blackHoleProgress,
+    0.20,
+    0.82,
+  );
+
+const blackHoleTime =
+  performance.now() * 0.00055;
+
+const TWO_PI =
+  Math.PI * 2;
+
+const sunTime =
+  performance.now() * 0.001;
+
+for (let i = 0; i < pos.length; i += 3) {
+  const pointIndex = i / 3;
+
+  // --------------------------------
+  // SPHERE → GALAXY
+  // --------------------------------
+
+  const galaxyX =
+    this.spherePositions[i] *
+      (1 - this.morphProgress) +
+    this.networkPositions[i] *
+      this.morphProgress;
+
+  const galaxyY =
+    this.spherePositions[i + 1] *
+      (1 - this.morphProgress) +
+    this.networkPositions[i + 1] *
+      this.morphProgress;
+
+  const galaxyZ =
+    this.spherePositions[i + 2] *
+      (1 - this.morphProgress) +
+    this.networkPositions[i + 2] *
+      this.morphProgress;
+
+  // --------------------------------
+  // GALAXY → SOLAR SYSTEM
+  // --------------------------------
+
+  const solarX =
+    galaxyX *
+      (1 - this.solarProgress) +
+    this.solarPositions[i] *
+      this.solarProgress;
+
+  const solarY =
+    galaxyY *
+      (1 - this.solarProgress) +
+    this.solarPositions[i + 1] *
+      this.solarProgress;
+
+  const solarZ =
+    galaxyZ *
+      (1 - this.solarProgress) +
+    this.solarPositions[i + 2] *
+      this.solarProgress;
+
+  // --------------------------------
+  // SOLAR SYSTEM → SUN
+  // --------------------------------
+
+  const phase =
+    this.sunPhases[pointIndex];
+
+  const movementX =
+    Math.sin(sunTime + phase) *
+    0.018 *
+    this.sunProgress;
+
+  const movementY =
+    Math.cos(
+      sunTime * 0.9 +
+      phase * 1.7,
+    ) *
+    0.018 *
+    this.sunProgress;
+
+  const movementZ =
+    Math.sin(
+      sunTime * 0.75 +
+      phase * 2.3,
+    ) *
+    0.018 *
+    this.sunProgress;
+
+  const normalX =
+    solarX *
+      (1 - this.sunProgress) +
+    (
+      this.sunPositions[i] +
+      movementX
+    ) *
+      this.sunProgress;
+
+  const normalY =
+    solarY *
+      (1 - this.sunProgress) +
+    (
+      this.sunPositions[i + 1] +
+      movementY
+    ) *
+      this.sunProgress;
+
+  const normalZ =
+    solarZ *
+      (1 - this.sunProgress) +
+    (
+      this.sunPositions[i + 2] +
+      movementZ
+    ) *
+      this.sunProgress;
+
+  // --------------------------------
+  // BLACK HOLE
+  // --------------------------------
+
+  const role =
+    this.blackHoleRoles[pointIndex];
+
+  let blackX = 0;
+  let blackY = 0;
+  let blackZ = 0;
+
+  if (role === 0) {
+    // ---------- BLACK CORE ----------
+
+    blackX =
+      this.blackHoleCorePositions[i];
+
+    blackY =
+      this.blackHoleCorePositions[i + 1];
+
+    blackZ =
+      this.blackHoleCorePositions[i + 2];
+  } else {
+    // ---------- ACCRETION DISK ----------
+
+    const baseRadius =
+  this.blackHoleRadii[pointIndex];
+
+const baseAngle =
+  this.blackHoleAngles[pointIndex];
+
+const speed =
+  this.blackHoleSpeeds[pointIndex];
+
+const phase =
+  this.blackHolePhases[pointIndex];
+
+// Каждая частица постоянно находится
+// на своей орбите.
+// Никаких teleport/reset.
+
+const angle =
+  baseAngle +
+  blackHoleTime *
+    speed;
+
+// Небольшая естественная толщина диска.
+const thickness =
+  Math.sin(
+    phase +
+    blackHoleTime *
+      speed *
+      0.8,
+  ) *
+  0.055;
+
+// Лёгкая деформация радиуса,
+// чтобы диск не выглядел идеальным кольцом.
+const radialNoise =
+  Math.sin(
+    phase +
+    blackHoleTime *
+      speed *
       0.35,
-      1.0,
+  ) *
+  0.035;
+
+const radius =
+  baseRadius +
+  radialNoise;
+
+blackX =
+  Math.cos(angle) *
+  radius;
+
+blackY =
+  thickness;
+
+blackZ =
+  Math.sin(angle) *
+  radius;
+  }
+
+  // --------------------------------
+  // BLEND
+  // --------------------------------
+
+  if (role === 0) {
+    pos[i] =
+      normalX *
+        (1 - blackCoreProgress) +
+      blackX *
+        blackCoreProgress;
+
+    pos[i + 1] =
+      normalY *
+        (1 - blackCoreProgress) +
+      blackY *
+        blackCoreProgress;
+
+    pos[i + 2] =
+      normalZ *
+        (1 - blackCoreProgress) +
+      blackZ *
+        blackCoreProgress;
+  } else {
+    pos[i] =
+      normalX *
+        (1 - diskProgress) +
+      blackX *
+        diskProgress;
+
+    pos[i + 1] =
+      normalY *
+        (1 - diskProgress) +
+      blackY *
+        diskProgress;
+
+    pos[i + 2] =
+      normalZ *
+        (1 - diskProgress) +
+      blackZ *
+        diskProgress;
+  }
+}
+
+// ВАЖНО:
+// обновляем GPU один раз за кадр,
+// а не 2200 раз.
+this.points.geometry.attributes.position.needsUpdate =
+  true;
+
+    // ---------- BLACK HOLE PARTICLE COLORS ----------
+
+    const blackColorProgress = THREE.MathUtils.smoothstep(
+      this.blackHoleProgress,
+      0.18,
+      0.72,
     );
 
-    const collapseScale = 1 - collapseProgress * 0.82;
+    const currentR = this.material.color.r;
 
-    const blackHoleTime = performance.now() * 0.0006;
+    const currentG = this.material.color.g;
 
-    for (let i = 0; i < pos.length; i++) {
-      const galaxy =
-        this.spherePositions[i] * (1 - this.morphProgress) +
-        this.networkPositions[i] * this.morphProgress;
+    const currentB = this.material.color.b;
 
-      const solar =
-        galaxy * (1 - this.solarProgress) +
-        this.solarPositions[i] * this.solarProgress;
+    for (let i = 0; i < this.blackHoleRoles.length; i++) {
+      const colorIndex = i * 3;
 
-      const pointIndex = Math.floor(i / 3);
-      const phase = this.sunPhases[pointIndex];
+      if (this.blackHoleRoles[i] === 0) {
+        // Эти точки становятся чёрными
+        // и формируют плотное ядро.
 
-      const sunTime = performance.now() * 0.001;
+        pointColors[colorIndex] = currentR * (1 - blackColorProgress);
 
-      const movementX = Math.sin(sunTime + phase) * 0.018 * this.sunProgress;
+        pointColors[colorIndex + 1] = currentG * (1 - blackColorProgress);
 
-      const movementY =
-        Math.cos(sunTime * 0.9 + phase * 1.7) * 0.018 * this.sunProgress;
+        pointColors[colorIndex + 2] = currentB * (1 - blackColorProgress);
+      } else {
+        // Диск остаётся светлым.
 
-      const movementZ =
-        Math.sin(sunTime * 0.75 + phase * 2.3) * 0.018 * this.sunProgress;
+        pointColors[colorIndex] = 1;
 
-      const sunX =
-        (this.sunPositions[i] +
-          (i % 3 === 0 ? movementX : i % 3 === 1 ? movementY : movementZ)) *
-        collapseScale;
+        pointColors[colorIndex + 1] = 1;
 
-      const blackHoleIndex = pointIndex * 3;
-
-const blackHoleX =
-  this.blackHolePositions[blackHoleIndex];
-
-const blackHoleY =
-  this.blackHolePositions[blackHoleIndex + 1];
-
-const blackHoleZ =
-  this.blackHolePositions[blackHoleIndex + 2];
-
-      const blackHoleRadius = Math.sqrt(
-        blackHoleX * blackHoleX + blackHoleZ * blackHoleZ,
-      );
-
-      const blackHoleAngle = Math.atan2(blackHoleZ, blackHoleX);
-
-      const rotationSpeed = 0.35 + (1 - blackHoleRadius / 1.35) * 0.8;
-
-      const angle =
-        blackHoleAngle +
-        blackHoleTime * rotationSpeed +
-        this.blackHolePhases[pointIndex] * 0.08;
-
-      const diskX = Math.cos(angle) * blackHoleRadius;
-
-      const diskY = blackHoleY;
-
-      const diskZ = Math.sin(angle) * blackHoleRadius;
-
-      const sunState = solar * (1 - this.sunProgress) + sunX * this.sunProgress;
-
-      pos[i] =
-        sunState * (1 - diskProgress) +
-        (i % 3 === 0 ? diskX : i % 3 === 1 ? diskY : diskZ) * diskProgress;
+        pointColors[colorIndex + 2] = 1;
+      }
     }
 
-    this.points.geometry.attributes.position.needsUpdate = true;
+    this.points.geometry.attributes.color.needsUpdate = true;
 
     // ---------- SUN CORE ANIMATION ----------
 
@@ -694,7 +967,8 @@ const blackHoleZ =
             : coreMovementZ;
 
       const coreCollapse =
-        1 - THREE.MathUtils.smoothstep(this.blackHoleProgress, 0.0, 0.75);
+        1 -
+        THREE.MathUtils.smoothstep(this.blackHoleProgress, 0.0, 0.85) * 0.45;
 
       corePos[i] =
         (this.innerPositions[i] * (1 - this.sunProgress) +
@@ -725,63 +999,54 @@ const blackHoleZ =
 
     // this.material.color.copy(currentColor);
     // this.material.color.set(0xffffff);
-    const sphereColor =
-  new THREE.Color(0xffffff);
+    const sphereColor = new THREE.Color(0xffffff);
 
-const solarColor =
-  new THREE.Color(0xffe37a);
+    const solarColor = new THREE.Color(0xffe37a);
 
-const redColor =
-  new THREE.Color(0xff2414);
+    const redColor = new THREE.Color(0xff2414);
 
-const whiteColor =
-  new THREE.Color(0xffffff);
+    const whiteColor = new THREE.Color(0xffffff);
 
-let currentColor;
+    let currentColor;
 
-if (this.blackHoleProgress <= 0.001) {
-  // Обычные состояния:
-  // Sphere / Galaxy / Solar System / Sun
-  currentColor = sphereColor
-    .clone()
-    .lerp(solarColor, this.sunProgress);
-} else if (this.blackHoleProgress < 0.55) {
-  // Sun → red
-  const redProgress =
-    THREE.MathUtils.smoothstep(
-      this.blackHoleProgress,
-      0.0,
-      0.55,
-    );
+    if (this.blackHoleProgress <= 0.001) {
+      // Обычные состояния:
+      // Sphere / Galaxy / Solar System / Sun
+      currentColor = sphereColor.clone().lerp(solarColor, this.sunProgress);
+    } else if (this.blackHoleProgress < 0.55) {
+      // Sun → red
+      const redProgress = THREE.MathUtils.smoothstep(
+        this.blackHoleProgress,
+        0.0,
+        0.55,
+      );
 
-  currentColor = solarColor
-    .clone()
-    .lerp(redColor, redProgress);
-} else {
-  // red → white flash
-  const whiteProgress =
-    THREE.MathUtils.smoothstep(
-      this.blackHoleProgress,
-      0.55,
-      0.82,
-    );
+      currentColor = solarColor.clone().lerp(redColor, redProgress);
+    } else {
+      // red → white flash
+      const whiteProgress = THREE.MathUtils.smoothstep(
+        this.blackHoleProgress,
+        0.55,
+        0.82,
+      );
 
-  currentColor = redColor
-    .clone()
-    .lerp(whiteColor, whiteProgress);
-}
+      currentColor = redColor.clone().lerp(whiteColor, whiteProgress);
+    }
 
-this.material.color.copy(currentColor);
+    this.material.color.copy(currentColor);
 
     this.material.opacity = this.opacity;
     this.innerMaterial.opacity =
-      this.opacity *
-      (1 - this.morphProgress + this.solarProgress * 0.8) *
-      (1 - this.blackHoleProgress);
+      this.opacity * (1 - this.morphProgress + this.solarProgress * 0.8);
+
+    const innerColor = new THREE.Color(0x2a4f8f).lerp(
+      new THREE.Color(0xffd45a),
+      this.solarProgress,
+    );
 
     this.innerMaterial.color
-      .set(0x2a4f8f)
-      .lerp(new THREE.Color(0xffd45a), this.solarProgress);
+      .copy(innerColor)
+      .lerp(new THREE.Color(0x000000), this.blackHoleProgress);
 
     // const pulse = 1 + Math.sin(performance.now() * 0.0003) * 0.015;
 
@@ -822,17 +1087,40 @@ this.material.color.copy(currentColor);
     const galaxySpeed =
       (0.0008 + this.morphProgress * 0.0014) * (1 + this.hover * 0.6);
 
-    const blackHoleRotationBoost = 1 + this.blackHoleProgress * 5;
+    const normalRotation =
+  1 -
+  THREE.MathUtils.smoothstep(
+    this.blackHoleProgress,
+    0.0,
+    0.18,
+  );
 
-    this.points.rotation.y += galaxySpeed * blackHoleRotationBoost;
+this.points.rotation.y +=
+  galaxySpeed *
+  normalRotation;
 
     this.points.rotation.x += 0.00025;
     this.points.rotation.z += 0.00012;
 
-    const coreRotationBoost = 1 + this.sunProgress * 2.5;
+    const coreRotationBoost =
+  1 -
+  THREE.MathUtils.smoothstep(
+    this.blackHoleProgress,
+    0.0,
+    0.18,
+  );
 
-    this.innerPoints.rotation.y -= 0.0013 * coreRotationBoost;
+const solarCoreRotation =
+  1 + this.sunProgress * 2.5;
 
-    this.innerPoints.rotation.x += 0.0005 * coreRotationBoost;
+this.innerPoints.rotation.y -=
+  0.0013 *
+  solarCoreRotation *
+  coreRotationBoost;
+
+this.innerPoints.rotation.x +=
+  0.0005 *
+  solarCoreRotation *
+  coreRotationBoost;
   }
 }
