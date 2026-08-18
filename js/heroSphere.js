@@ -208,65 +208,28 @@ export default class HeroSphere {
 
     // ---------- BLACK HOLE ----------
 
-    // 0 = black core
-    // 1 = accretion disk
-
-    this.blackHoleRoles = new Uint8Array(count);
-
-    this.blackHoleCorePositions = new Float32Array(positions.length);
+    // Все внешние точки становятся
+    // частью аккреционного диска.
+    // Чёрное ядро теперь отдельный Mesh.
 
     this.blackHoleRadii = new Float32Array(count);
-
     this.blackHoleAngles = new Float32Array(count);
-
     this.blackHoleSpeeds = new Float32Array(count);
-
     this.blackHolePhases = new Float32Array(count);
 
-    const blackCoreRatio = 0.48;
-    const blackCoreRadius = 0.28;
-
     const diskInnerRadius = 0.34;
-    const diskOuterRadius = 1.35;
+    const diskOuterRadius = 1.28;
 
     for (let i = 0; i < count; i++) {
-      const isCore = Math.random() < blackCoreRatio;
-
-      this.blackHoleRoles[i] = isCore ? 0 : 1;
-
       this.blackHolePhases[i] = Math.random() * Math.PI * 2;
 
-      if (isCore) {
-        // Плотное сферическое облако
-        // вокруг будущего event horizon.
+      this.blackHoleRadii[i] =
+        diskInnerRadius +
+        Math.pow(Math.random(), 0.65) * (diskOuterRadius - diskInnerRadius);
 
-        const u = Math.random();
-        const v = Math.random();
+      this.blackHoleAngles[i] = Math.random() * Math.PI * 2;
 
-        const theta = 2 * Math.PI * u;
-
-        const phi = Math.acos(2 * v - 1);
-
-        const r = blackCoreRadius * Math.pow(Math.random(), 0.35);
-
-        this.blackHoleCorePositions[i * 3] =
-          r * Math.sin(phi) * Math.cos(theta);
-
-        this.blackHoleCorePositions[i * 3 + 1] = r * Math.cos(phi);
-
-        this.blackHoleCorePositions[i * 3 + 2] =
-          r * Math.sin(phi) * Math.sin(theta);
-      } else {
-        // Параметры аккреционного диска.
-
-        this.blackHoleRadii[i] =
-          diskInnerRadius +
-          Math.pow(Math.random(), 0.65) * (diskOuterRadius - diskInnerRadius);
-
-        this.blackHoleAngles[i] = Math.random() * Math.PI * 2;
-
-        this.blackHoleSpeeds[i] = 0.45 + Math.random() * 0.65;
-      }
+      this.blackHoleSpeeds[i] = 0.45 + Math.random() * 0.65;
     }
 
     this.material = new THREE.PointsMaterial({
@@ -274,11 +237,36 @@ export default class HeroSphere {
       size: 0.016,
       transparent: true,
       opacity: 0,
-      depthWrite: false,
+      depthWrite: true,
+      depthTest: true,
       vertexColors: true,
     });
 
     this.points = new THREE.Points(geometry, this.material);
+    this.points.renderOrder = 1;
+
+    // ---------- BLACK HOLE CORE ----------
+
+    const blackHoleGeometry = new THREE.SphereGeometry(1, 48, 48);
+
+    const blackHoleMaterial = new THREE.MeshBasicMaterial({
+      color: 0x000000,
+      transparent: true,
+      opacity: 0,
+      depthWrite: true,
+      depthTest: true,
+    });
+
+    this.blackHoleCore = new THREE.Mesh(blackHoleGeometry, blackHoleMaterial);
+
+    // Размер event horizon.
+    // Сама геометрия имеет радиус 1,
+    // поэтому scale определяет реальный размер.
+    this.blackHoleCore.scale.setScalar(0.3);
+
+    this.blackHoleCore.renderOrder = 0;
+
+    this.group.add(this.blackHoleCore);
 
     // внутреннее ядро
     const innerCount = 420;
@@ -645,6 +633,16 @@ export default class HeroSphere {
       0.82,
     );
 
+    // Плавно появляется центральная чёрная область.
+    this.blackHoleCore.material.opacity = blackCoreProgress;
+
+    this.blackHoleCore.material.depthWrite = blackCoreProgress > 0.05;
+
+    // const coreScale = 0.3 * blackCoreProgress;
+    const coreScale = 0.45 * blackCoreProgress;
+
+    this.blackHoleCore.scale.setScalar(coreScale);
+
     const blackHoleTime = performance.now() * 0.00055;
 
     const TWO_PI = Math.PI * 2;
@@ -713,76 +711,48 @@ export default class HeroSphere {
         (this.sunPositions[i + 2] + movementZ) * this.sunProgress;
 
       // --------------------------------
-      // BLACK HOLE
+      // BLACK HOLE — ACCRETION DISK
       // --------------------------------
 
-      const role = this.blackHoleRoles[pointIndex];
+      const baseRadius = this.blackHoleRadii[pointIndex];
 
-      let blackX = 0;
-      let blackY = 0;
-      let blackZ = 0;
+      const baseAngle = this.blackHoleAngles[pointIndex];
 
-      if (role === 0) {
-        // ---------- BLACK CORE ----------
+      const speed = this.blackHoleSpeeds[pointIndex];
 
-        blackX = this.blackHoleCorePositions[i];
+      const blackHolePhase = this.blackHolePhases[pointIndex];
 
-        blackY = this.blackHoleCorePositions[i + 1];
+      // Постоянное движение по орбите.
+      // Частицы не исчезают и не телепортируются.
 
-        blackZ = this.blackHoleCorePositions[i + 2];
-      } else {
-        // ---------- ACCRETION DISK ----------
+      const angle = baseAngle + blackHoleTime * speed;
 
-        const baseRadius = this.blackHoleRadii[pointIndex];
+      // Небольшая толщина диска.
+      const thickness =
+        Math.sin(blackHolePhase + blackHoleTime * speed * 0.8) * 0.045;
 
-        const baseAngle = this.blackHoleAngles[pointIndex];
+      // Небольшая радиальная деформация,
+      // чтобы диск не выглядел математически идеальным.
+      const radialNoise =
+        Math.sin(blackHolePhase + blackHoleTime * speed * 0.35) * 0.025;
 
-        const speed = this.blackHoleSpeeds[pointIndex];
+      const radius = baseRadius + radialNoise;
 
-        const phase = this.blackHolePhases[pointIndex];
+      const blackX = Math.cos(angle) * radius;
 
-        // Каждая частица постоянно находится
-        // на своей орбите.
-        // Никаких teleport/reset.
+      const blackY = thickness;
 
-        const angle = baseAngle + blackHoleTime * speed;
-
-        // Небольшая естественная толщина диска.
-        const thickness = Math.sin(phase + blackHoleTime * speed * 0.8) * 0.055;
-
-        // Лёгкая деформация радиуса,
-        // чтобы диск не выглядел идеальным кольцом.
-        const radialNoise =
-          Math.sin(phase + blackHoleTime * speed * 0.35) * 0.035;
-
-        const radius = baseRadius + radialNoise;
-
-        blackX = Math.cos(angle) * radius;
-
-        blackY = thickness;
-
-        blackZ = Math.sin(angle) * radius;
-      }
+      const blackZ = Math.sin(angle) * radius;
 
       // --------------------------------
       // BLEND
       // --------------------------------
 
-      if (role === 0) {
-        pos[i] = normalX * (1 - blackCoreProgress) + blackX * blackCoreProgress;
+      pos[i] = normalX * (1 - diskProgress) + blackX * diskProgress;
 
-        pos[i + 1] =
-          normalY * (1 - blackCoreProgress) + blackY * blackCoreProgress;
+      pos[i + 1] = normalY * (1 - diskProgress) + blackY * diskProgress;
 
-        pos[i + 2] =
-          normalZ * (1 - blackCoreProgress) + blackZ * blackCoreProgress;
-      } else {
-        pos[i] = normalX * (1 - diskProgress) + blackX * diskProgress;
-
-        pos[i + 1] = normalY * (1 - diskProgress) + blackY * diskProgress;
-
-        pos[i + 2] = normalZ * (1 - diskProgress) + blackZ * diskProgress;
-      }
+      pos[i + 2] = normalZ * (1 - diskProgress) + blackZ * diskProgress;
     }
 
     // ВАЖНО:
@@ -792,39 +762,12 @@ export default class HeroSphere {
 
     // ---------- BLACK HOLE PARTICLE COLORS ----------
 
-    const blackColorProgress = THREE.MathUtils.smoothstep(
-      this.blackHoleProgress,
-      0.18,
-      0.72,
-    );
+    // Все частицы аккреционного диска остаются светлыми.
 
-    const currentR = this.material.color.r;
-
-    const currentG = this.material.color.g;
-
-    const currentB = this.material.color.b;
-
-    for (let i = 0; i < this.blackHoleRoles.length; i++) {
-      const colorIndex = i * 3;
-
-      if (this.blackHoleRoles[i] === 0) {
-        // Эти точки становятся чёрными
-        // и формируют плотное ядро.
-
-        pointColors[colorIndex] = currentR * (1 - blackColorProgress);
-
-        pointColors[colorIndex + 1] = currentG * (1 - blackColorProgress);
-
-        pointColors[colorIndex + 2] = currentB * (1 - blackColorProgress);
-      } else {
-        // Диск остаётся светлым.
-
-        pointColors[colorIndex] = 1;
-
-        pointColors[colorIndex + 1] = 1;
-
-        pointColors[colorIndex + 2] = 1;
-      }
+    for (let i = 0; i < pointColors.length; i += 3) {
+      pointColors[i] = 1;
+      pointColors[i + 1] = 1;
+      pointColors[i + 2] = 1;
     }
 
     this.points.geometry.attributes.color.needsUpdate = true;
@@ -932,7 +875,9 @@ export default class HeroSphere {
 
     this.material.opacity = this.opacity;
     this.innerMaterial.opacity =
-      this.opacity * (1 - this.morphProgress + this.solarProgress * 0.8);
+      this.opacity *
+      (1 - this.morphProgress + this.solarProgress * 0.8) *
+      (1 - blackCoreProgress);
 
     const innerColor = new THREE.Color(0x2a4f8f).lerp(
       new THREE.Color(0xffd45a),

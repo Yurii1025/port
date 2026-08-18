@@ -1,23 +1,21 @@
 export default {
+  particles: 100,
 
-particles:100,
+  connectionDistance: 1.55,
 
-connectionDistance:1.55,
+  particleSize: 0.032,
 
-particleSize:0.032,
+  speed: 0.0035,
 
-speed:0.0035,
+  spaceX: 12,
 
-spaceX:12,
+  spaceY: 8,
 
-spaceY:8,
+  spaceZ: 6,
 
-spaceZ:6,
+  cameraDistance: 9,
 
-cameraDistance:9,
+  mouseStrength: 0.75,
 
-mouseStrength:0.75,
-
-rotationSpeed:0.00045,
-
-}
+  rotationSpeed: 0.00045,
+};

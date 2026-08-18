@@ -39,16 +39,15 @@ export default class Plexus {
     for (let i = 0; i < this.count; i++) {
       const i3 = i * 3;
 
-        this.positions[i3] =
-            this.randomDistribution() * this.world.width * 0.5;
+      this.positions[i3] = this.randomDistribution() * this.world.width * 0.5;
 
-        this.positions[i3 + 1] =
-            this.randomDistribution() * this.world.height * 0.5;
+      this.positions[i3 + 1] =
+        this.randomDistribution() * this.world.height * 0.5;
 
-        this.positions[i3 + 2] =
-            this.randomDistribution() * this.world.depth * 0.5;
+      this.positions[i3 + 2] =
+        this.randomDistribution() * this.world.depth * 0.5;
 
-        this.sizes[i] = 0.75 + Math.random() * 0.5;
+      this.sizes[i] = 0.75 + Math.random() * 0.5;
       this.velocities[i3] = (Math.random() - 0.5) * 0.004;
       this.velocities[i3 + 1] = (Math.random() - 0.5) * 0.004;
       this.velocities[i3 + 2] = (Math.random() - 0.5) * 0.004;
@@ -62,21 +61,19 @@ export default class Plexus {
     );
 
     this.geometry.setAttribute(
-    "size",
-    new THREE.BufferAttribute(this.sizes, 1)
-);
+      "size",
+      new THREE.BufferAttribute(this.sizes, 1),
+    );
 
-const material = new THREE.ShaderMaterial({
+    const material = new THREE.ShaderMaterial({
+      vertexShader: pointVertexShader,
 
-    vertexShader: pointVertexShader,
+      fragmentShader: pointFragmentShader,
 
-    fragmentShader: pointFragmentShader,
+      transparent: true,
 
-    transparent: true,
-
-    depthWrite: false
-
-});
+      depthWrite: false,
+    });
 
     this.points = new THREE.Points(this.geometry, material);
 

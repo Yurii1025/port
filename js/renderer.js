@@ -1,17 +1,12 @@
 import * as THREE from "../build/three.module.js";
 
 export const renderer = new THREE.WebGLRenderer({
+  antialias: true,
 
-    antialias: true,
-
-    alpha: true
-
+  alpha: true,
 });
 
-
-renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio, 2)
-);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 // renderer.setPixelRatio(window.devicePixelRatio);
 
 // renderer.setPixelRatio(
@@ -26,11 +21,7 @@ renderer.setPixelRatio(
 
 // );
 
-renderer.setSize(
-    window.innerWidth,
-    window.innerHeight,
-    false
-);
+renderer.setSize(window.innerWidth, window.innerHeight, false);
 
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 
@@ -38,21 +29,10 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 
 renderer.toneMappingExposure = 1.0;
 
-document.body.appendChild(
+document.body.appendChild(renderer.domElement);
 
-    renderer.domElement
+window.addEventListener("resize", () => {
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-);
-
-window.addEventListener("resize", () =>
-{
-    renderer.setPixelRatio(
-        Math.min(window.devicePixelRatio, 2)
-    );
-
-    renderer.setSize(
-        window.innerWidth,
-        window.innerHeight,
-        false
-    );
+  renderer.setSize(window.innerWidth, window.innerHeight, false);
 });
