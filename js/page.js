@@ -84,6 +84,28 @@ export function initScrollEffects(heroSphere) {
   });
 }
 
+  const headerButtons = document.querySelectorAll(
+    ".list_item[data-section]",
+  );
+
+  headerButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      if (isAnimating) {
+        return;
+      }
+
+      const targetIndex = Number(button.dataset.section);
+
+      if (targetIndex === currentIndex) {
+        return;
+      }
+
+      goToSection(targetIndex);
+    });
+  });
+
 function goToSection(index) {
   if (index < 0 || index >= sections.length) {
     return;
@@ -96,31 +118,53 @@ function goToSection(index) {
 
   const goingDown = index > currentIndex;
 
+  // // --- трансформация объекта ---
+  // // 1 → 2
+  // if (currentIndex === 0 && index === 1) {
+  //   sphere.toNetwork();
+  // }
+
+  // // 2 → 1
+  // if (currentIndex === 1 && index === 0) {
+  //   sphere.toSphere();
+  // }
+
+  // // 2 → 3
+  // if (currentIndex === 1 && index === 2) {
+  //   sphere.toSolarSystem();
+  // }
+
+  // // 3 → 2
+  // if (currentIndex === 2 && index === 1) {
+  //   sphere.toNetwork();
+  // }
+
+  // // 3 → 4
+  // if (currentIndex === 2 && index === 3) {
+  //   sphere.toSun();
+  // }
+  
   // --- трансформация объекта ---
-  // 1 → 2
-  if (currentIndex === 0 && index === 1) {
-    sphere.toNetwork();
-  }
 
-  // 2 → 1
-  if (currentIndex === 1 && index === 0) {
-    sphere.toSphere();
-  }
+if (index === 0) {
+  // Любой переход на Home
+  sphere.toSphere();
+}
 
-  // 2 → 3
-  if (currentIndex === 1 && index === 2) {
-    sphere.toSolarSystem();
-  }
+if (index === 1) {
+  // Любой переход на About
+  sphere.toNetwork();
+}
 
-  // 3 → 2
-  if (currentIndex === 2 && index === 1) {
-    sphere.toNetwork();
-  }
+if (index === 2) {
+  // Любой переход на Skills
+  sphere.toSolarSystem();
+}
 
-  // 3 → 4
-  if (currentIndex === 2 && index === 3) {
-    sphere.toSun();
-  }
+if (index === 3) {
+  // Любой переход на Works
+  sphere.toSun();
+}
 
   // 4 → 3
   if (currentIndex === 3 && index === 2) {

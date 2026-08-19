@@ -204,6 +204,10 @@ section {
   justify-content: space-between;
   gap: 20px;
 }
+.l_i {
+  text-decoration: none;
+  list-style: none;
+}
 .list_item {
   color: #fff;
   text-decoration: none;
@@ -215,7 +219,7 @@ section {
     opacity 0.25s ease-out;
 }
 .list_item:hover {
-  color: rgba(98, 182, 255, 0.87);
+  color: #4aaaf9;
 
   text-shadow: 4px 7px 10px rgba(178, 212, 255, 0.423);
 }

@@ -423,28 +423,29 @@ export default class HeroSphere {
     this.targetX = this.aboutPosition.x;
     this.targetY = this.aboutPosition.y;
   }
-  toSolarSystem() {
-    this.targetSun = 0;
-    this.targetBlackHole = 0;
-    this.targetSolar = 1;
+toSolarSystem() {
+  this.targetMorph = 1;
+  this.targetSun = 0;
+  this.targetBlackHole = 0;
+  this.targetSolar = 1;
 
-    this.targetScale = 0.75;
+  this.targetScale = 0.75;
 
-    this.targetX = this.skillsPosition.x;
-    this.targetY = this.skillsPosition.y;
-  }
+  this.targetX = this.skillsPosition.x;
+  this.targetY = this.skillsPosition.y;
+}
 
-  toSun() {
-    this.targetSolar = 1;
-    this.targetSun = 1;
-    this.targetBlackHole = 0;
+toSun() {
+  this.targetMorph = 1;
+  this.targetSolar = 1;
+  this.targetSun = 1;
+  this.targetBlackHole = 0;
 
-    this.targetScale = 0.42;
+  this.targetScale = 0.42;
 
-    this.targetX = this.worksPosition.x;
-    // this.targetY = this.worksPosition.y;
-    this.targetY = this.worksPosition.y + 0.1;
-  }
+  this.targetX = this.worksPosition.x;
+  this.targetY = this.worksPosition.y;
+}
 
   toBlackHole() {
     this.targetSolar = 1;
