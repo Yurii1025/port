@@ -247,17 +247,75 @@ export default class HeroSphere {
 
     // ---------- BLACK HOLE CORE ----------
 
+    // const blackHoleGeometry = new THREE.SphereGeometry(1, 48, 48);
+
+    // const blackHoleMaterial = new THREE.MeshBasicMaterial({
+    //   color: 0x000000,
+    //   transparent: true,
+    //   opacity: 0,
+    //   depthWrite: true,
+    //   depthTest: true,
+    // });
+
+    // this.blackHoleCore = new THREE.Mesh(blackHoleGeometry, blackHoleMaterial);
     const blackHoleGeometry = new THREE.SphereGeometry(1, 48, 48);
 
-    const blackHoleMaterial = new THREE.MeshBasicMaterial({
-      color: 0x000000,
-      transparent: true,
-      opacity: 0,
-      depthWrite: true,
-      depthTest: true,
-    });
+const blackHoleMaterial = new THREE.ShaderMaterial({
+  transparent: true,
+  depthWrite: true,
+  depthTest: true,
 
-    this.blackHoleCore = new THREE.Mesh(blackHoleGeometry, blackHoleMaterial);
+  uniforms: {
+    uOpacity: { value: 0 },
+  },
+
+  vertexShader: `
+    varying vec3 vNormal;
+
+    void main() {
+      vNormal = normalize(normalMatrix * normal);
+
+      gl_Position =
+        projectionMatrix *
+        modelViewMatrix *
+        vec4(position, 1.0);
+    }
+  `,
+
+  fragmentShader: `
+  varying vec3 vNormal;
+
+  uniform float uOpacity;
+
+  void main() {
+    vec3 normal = normalize(vNormal);
+
+    // Направление небольшого источника света.
+    vec3 lightDirection = normalize(vec3(0.45, 0.65, 1.0));
+
+    // Насколько поверхность повернута к свету.
+    float light = max(dot(normal, lightDirection), 0.0);
+
+    // Сильно концентрируем свет в небольшой области.
+    light = pow(light, 7.0);
+
+    // Почти полностью чёрная поверхность.
+    vec3 darkColor = vec3(0.0015, 0.0015, 0.002);
+
+    // Очень мягкий серый блик.
+    vec3 lightColor = vec3(0.22, 0.22, 0.24);
+
+    vec3 color = darkColor + lightColor * light;
+
+    gl_FragColor = vec4(color, uOpacity);
+  }
+`,
+});
+
+this.blackHoleCore = new THREE.Mesh(
+  blackHoleGeometry,
+  blackHoleMaterial
+);
 
     // Размер event horizon.
     // Сама геометрия имеет радиус 1,
@@ -636,7 +694,8 @@ toSun() {
     );
 
     // Плавно появляется центральная чёрная область.
-    this.blackHoleCore.material.opacity = blackCoreProgress;
+    // this.blackHoleCore.material.opacity = blackCoreProgress;
+    this.blackHoleCore.material.uniforms.uOpacity.value = blackCoreProgress;
 
     this.blackHoleCore.material.depthWrite = blackCoreProgress > 0.05;
 
