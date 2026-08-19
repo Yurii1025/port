@@ -1653,8 +1653,8 @@ margin-left: 40px;
 }
 
 .social_icon-item {
-  width: 46px;
-  height: 46px;
+  width: 66px;
+  height: 66px;
 
   display: flex;
   justify-content: center;
@@ -1682,8 +1682,8 @@ margin-left: 40px;
 }
 
 .social_img {
-  width: 24px;
-  height: 24px;
+  width: 34px;
+  height: 34px;
 
   object-fit: contain;
 

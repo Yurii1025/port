@@ -260,16 +260,16 @@ export default class HeroSphere {
     // this.blackHoleCore = new THREE.Mesh(blackHoleGeometry, blackHoleMaterial);
     const blackHoleGeometry = new THREE.SphereGeometry(1, 48, 48);
 
-const blackHoleMaterial = new THREE.ShaderMaterial({
-  transparent: true,
-  depthWrite: true,
-  depthTest: true,
+    const blackHoleMaterial = new THREE.ShaderMaterial({
+      transparent: true,
+      depthWrite: true,
+      depthTest: true,
 
-  uniforms: {
-    uOpacity: { value: 0 },
-  },
+      uniforms: {
+        uOpacity: { value: 0 },
+      },
 
-  vertexShader: `
+      vertexShader: `
     varying vec3 vNormal;
 
     void main() {
@@ -282,7 +282,7 @@ const blackHoleMaterial = new THREE.ShaderMaterial({
     }
   `,
 
-  fragmentShader: `
+      fragmentShader: `
   varying vec3 vNormal;
 
   uniform float uOpacity;
@@ -310,12 +310,9 @@ const blackHoleMaterial = new THREE.ShaderMaterial({
     gl_FragColor = vec4(color, uOpacity);
   }
 `,
-});
+    });
 
-this.blackHoleCore = new THREE.Mesh(
-  blackHoleGeometry,
-  blackHoleMaterial
-);
+    this.blackHoleCore = new THREE.Mesh(blackHoleGeometry, blackHoleMaterial);
 
     // Размер event horizon.
     // Сама геометрия имеет радиус 1,
@@ -384,7 +381,7 @@ this.blackHoleCore = new THREE.Mesh(
     );
 
     this.innerMaterial = new THREE.PointsMaterial({
-      color: 0x2a4f8f,
+      color: 0x66b4f6,
 
       size: 0.022,
 
@@ -481,29 +478,29 @@ this.blackHoleCore = new THREE.Mesh(
     this.targetX = this.aboutPosition.x;
     this.targetY = this.aboutPosition.y;
   }
-toSolarSystem() {
-  this.targetMorph = 1;
-  this.targetSun = 0;
-  this.targetBlackHole = 0;
-  this.targetSolar = 1;
+  toSolarSystem() {
+    this.targetMorph = 1;
+    this.targetSun = 0;
+    this.targetBlackHole = 0;
+    this.targetSolar = 1;
 
-  this.targetScale = 0.75;
+    this.targetScale = 0.75;
 
-  this.targetX = this.skillsPosition.x;
-  this.targetY = this.skillsPosition.y;
-}
+    this.targetX = this.skillsPosition.x;
+    this.targetY = this.skillsPosition.y;
+  }
 
-toSun() {
-  this.targetMorph = 1;
-  this.targetSolar = 1;
-  this.targetSun = 1;
-  this.targetBlackHole = 0;
+  toSun() {
+    this.targetMorph = 1;
+    this.targetSolar = 1;
+    this.targetSun = 1;
+    this.targetBlackHole = 0;
 
-  this.targetScale = 0.42;
+    this.targetScale = 0.42;
 
-  this.targetX = this.worksPosition.x;
-  this.targetY = this.worksPosition.y;
-}
+    this.targetX = this.worksPosition.x;
+    this.targetY = this.worksPosition.y;
+  }
 
   toBlackHole() {
     this.targetSolar = 1;
@@ -940,7 +937,11 @@ toSun() {
       (1 - this.morphProgress + this.solarProgress * 0.8) *
       (1 - blackCoreProgress);
 
-    const innerColor = new THREE.Color(0x2a4f8f).lerp(
+    // const innerColor = new THREE.Color(0x2a4f8f).lerp(
+    //   new THREE.Color(0xffd45a),
+    //   this.solarProgress,
+    // );
+    const innerColor = new THREE.Color(0x66b4f6).lerp(
       new THREE.Color(0xffd45a),
       this.solarProgress,
     );

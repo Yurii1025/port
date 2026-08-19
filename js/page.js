@@ -84,27 +84,25 @@ export function initScrollEffects(heroSphere) {
   });
 }
 
-  const headerButtons = document.querySelectorAll(
-    ".list_item[data-section]",
-  );
+const headerButtons = document.querySelectorAll(".list_item[data-section]");
 
-  headerButtons.forEach((button) => {
-    button.addEventListener("click", (event) => {
-      event.preventDefault();
+headerButtons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
 
-      if (isAnimating) {
-        return;
-      }
+    if (isAnimating) {
+      return;
+    }
 
-      const targetIndex = Number(button.dataset.section);
+    const targetIndex = Number(button.dataset.section);
 
-      if (targetIndex === currentIndex) {
-        return;
-      }
+    if (targetIndex === currentIndex) {
+      return;
+    }
 
-      goToSection(targetIndex);
-    });
+    goToSection(targetIndex);
   });
+});
 
 function goToSection(index) {
   if (index < 0 || index >= sections.length) {
@@ -143,28 +141,28 @@ function goToSection(index) {
   // if (currentIndex === 2 && index === 3) {
   //   sphere.toSun();
   // }
-  
+
   // --- трансформация объекта ---
 
-if (index === 0) {
-  // Любой переход на Home
-  sphere.toSphere();
-}
+  if (index === 0) {
+    // Любой переход на Home
+    sphere.toSphere();
+  }
 
-if (index === 1) {
-  // Любой переход на About
-  sphere.toNetwork();
-}
+  if (index === 1) {
+    // Любой переход на About
+    sphere.toNetwork();
+  }
 
-if (index === 2) {
-  // Любой переход на Skills
-  sphere.toSolarSystem();
-}
+  if (index === 2) {
+    // Любой переход на Skills
+    sphere.toSolarSystem();
+  }
 
-if (index === 3) {
-  // Любой переход на Works
-  sphere.toSun();
-}
+  if (index === 3) {
+    // Любой переход на Works
+    sphere.toSun();
+  }
 
   // 4 → 3
   if (currentIndex === 3 && index === 2) {
