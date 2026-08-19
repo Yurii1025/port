@@ -61,6 +61,16 @@ export function initScrollEffects(heroSphere) {
   );
   const scrollButtons = document.querySelectorAll(".scroll-down");
 
+  const reloadButton = document.querySelector(".reload_btn");
+
+  if (reloadButton) {
+    reloadButton.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      window.location.reload();
+    });
+  }
+
   scrollButtons.forEach((button) => {
     button.addEventListener("click", (event) => {
       event.preventDefault();
