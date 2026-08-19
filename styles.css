@@ -188,7 +188,7 @@ section {
   border-radius: 30px;
   position: fixed;
   top: 24px;
-  left: 45%;
+  left: 43%;
   transform: translateX(-50%);
 
   backdrop-filter: blur(2px);
@@ -955,7 +955,7 @@ margin-left: 40px;
         rgba(3, 14, 28, 0.78) 55%,
         rgba(0, 4, 9, .92) 100%
     );
-    margin-top: 40px;
+    margin-top: 20px;
     padding: 40px 40px 20px 40px;
 }
 .about_content {
@@ -1318,7 +1318,7 @@ margin-left: 40px;
   margin: 0 auto;
   display: flex;
   align-items: flex-start;
-  margin-top: 80px;
+  padding-top: 80px;
 }
 .hero_container {
 }
@@ -1383,12 +1383,13 @@ margin-left: 40px;
 }
 .preview {
   width: 200px;
+  height: 200px;
   margin-bottom: 10px;
   padding-top: 5px;
 }
 .preview img {
   border-radius: 12px;
-  width: 100%;
+  width: 100%; height: 100%;
   object-fit: cover;
 }
 .p_label {
@@ -1437,4 +1438,84 @@ margin-left: 40px;
   color: #fff;
   font-size: 14px;
   margin-bottom: 8px;
+}
+
+/* SCROLL DOWN BUTTON */
+
+.scroll-down {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+
+  /* transform: translateX(-50%); */
+
+  width: 62px;
+  height: 62px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border-radius: 50%;
+
+  background: radial-gradient(
+        circle at 65% 35%,
+        rgba(8, 136, 255, 0.384) 0%,
+        rgb(3, 14, 28) 55%,
+        rgb(0, 35, 74) 100%
+    );
+  border: 1px solid rgba(102, 181, 246, 0.403);
+
+  backdrop-filter: blur(4px);
+
+  z-index: 30;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+
+  cursor: pointer;
+}
+.scroll_text {
+  text-decoration: none;
+  color: #fff;
+  font-size: 12px;
+}
+
+.scroll_icon {
+  width: 37px;
+  height: 37px;
+
+  opacity: 0.8;
+
+  transition:
+    transform 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.scroll_icon img {
+  width: 100%;
+  object-fit: cover;
+}
+
+.scroll-down img :hover {
+  transform: translateY(-5px);
+
+  border-color: rgba(102, 180, 246, 0.65);
+
+  background: rgba(20, 55, 95, 0.65);
+
+  box-shadow:
+    3px 0 18px rgba(70, 150, 255, 0.472),
+    3px 6px 20px rgba(0, 0, 0, 0.418);
+}
+
+.scroll-down:hover .scroll_icon {
+  transform: translateY(3px);
+  opacity: 1;
 }

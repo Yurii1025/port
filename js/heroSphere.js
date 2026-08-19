@@ -442,7 +442,8 @@ export default class HeroSphere {
     this.targetScale = 0.42;
 
     this.targetX = this.worksPosition.x;
-    this.targetY = this.worksPosition.y;
+    // this.targetY = this.worksPosition.y;
+    this.targetY = this.worksPosition.y + 0.1;
   }
 
   toBlackHole() {

@@ -59,6 +59,19 @@ export function initScrollEffects(heroSphere) {
     },
     { passive: true },
   );
+  const scrollButtons = document.querySelectorAll(".scroll-down");
+
+  scrollButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      if (isAnimating) {
+        return;
+      }
+
+      goToSection(currentIndex + 1);
+    });
+  });
 }
 
 function goToSection(index) {
