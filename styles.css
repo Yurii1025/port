@@ -28,6 +28,46 @@ body {
   );
 }
 
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter/Inter-VariableFont_opsz,wght.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("../fonts/space-grotesk/SpaceGrotesk-Regular.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("../fonts/space-grotesk/SpaceGrotesk-Medium.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("../fonts/space-grotesk/SpaceGrotesk-SemiBold.ttf")
+    format("truetype");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("../fonts/space-grotesk/SpaceGrotesk-Bold.ttf") format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
 canvas {
   position: fixed;
 
@@ -1714,4 +1754,19 @@ margin-left: 40px;
   transform: scale(1.1);
 
   opacity: 1;
+}
+
+/*FONTS*/
+h1,
+h2,
+h3,
+.top_head1,
+.top_head2 {
+  font-family: "Space Grotesk", sans-serif;
+}
+.btn-primary,
+.btn-secondary,
+.nav,
+.list_item {
+  font-family: "Space Grotesk", sans-serif;
 }
