@@ -39,6 +39,7 @@ export function initScrollEffects(heroSphere) {
   sphere = heroSphere;
   let scrollAccumulator = 0;
   const scrollThreshold = 200;
+  
 
   window.addEventListener(
     "wheel",
@@ -59,6 +60,19 @@ export function initScrollEffects(heroSphere) {
     },
     { passive: true },
   );
+  const viewProjectsButton = document.querySelector("#view-projects");
+
+if (viewProjectsButton) {
+  viewProjectsButton.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    if (isAnimating) {
+      return;
+    }
+
+    goToSection(3);
+  });
+}
   const scrollButtons = document.querySelectorAll(".scroll-down");
 
   const reloadButton = document.querySelector(".reload_btn");

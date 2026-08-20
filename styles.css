@@ -1530,12 +1530,12 @@ margin-left: 40px;
   background: rgba(20, 55, 95, 0.65);
 
   box-shadow:
-    3px 0 18px rgba(70, 150, 255, 0.472),
-    3px 6px 20px rgba(0, 0, 0, 0.418);
+    3px 3px 18px rgba(70, 150, 255, 0.686),
+    3px 6px 20px rgba(0, 0, 0, 0.554);
 }
 
 .scroll-down:hover .scroll_icon {
-  transform: translateY(3px);
+  transform: translateY(4px);
   opacity: 1;
 }
 
