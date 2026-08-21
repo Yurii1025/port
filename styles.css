@@ -35,14 +35,14 @@ body {
   font-weight: 100 900;
   font-display: swap;
 }
-@font-face {
+/* @font-face {
   font-family: "Manrope";
   src: url("../fonts/Manrope/Manrope-VariableFont_wght.ttf")
     format("truetype");
   font-style: normal;
   font-weight: 200 800;
   font-display: swap;
-}
+} */
 
 
 canvas {
@@ -1734,7 +1734,7 @@ margin-left: 40px;
 }
 
 /*FONTS*/
-h1,
+/* h1,
 h2,
 h3,
 .top_head1,
@@ -1747,4 +1747,4 @@ h3,
 .nav,
 .list_item {
   font-family: "Manrope", sans-serif;
-}
+} */
