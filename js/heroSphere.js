@@ -5,7 +5,7 @@ export default class HeroSphere {
     this.group = new THREE.Group();
 
     const count = 2200;
-    const radius = 1.15;
+    const radius = 1;
 
     const positions = new Float32Array(count * 3);
 
@@ -412,7 +412,7 @@ export default class HeroSphere {
     this.heroPosition = { x: 3.6, y: 0.0 };
     this.aboutPosition = { x: -2.8, y: -0.2 };
     this.skillsPosition = { x: 3.1, y: -0.15 };
-    this.worksPosition = { x: 0.0, y: -2.5 };
+    this.worksPosition = { x: 0.27, y: -2.45 };
 
     // текущая и целевая позиции
     this.currentX = this.heroPosition.x;
