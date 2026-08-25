@@ -28,6 +28,7 @@ export function revealContent() {
   // }, 600);
   setTimeout(() => {
     sections[0].classList.add("active");
+    updateActiveNav(0);
 
     setTimeout(() => {
       playIntroAnimation(sections[0]);
@@ -39,7 +40,6 @@ export function initScrollEffects(heroSphere) {
   sphere = heroSphere;
   let scrollAccumulator = 0;
   const scrollThreshold = 200;
-  
 
   window.addEventListener(
     "wheel",
@@ -62,17 +62,17 @@ export function initScrollEffects(heroSphere) {
   );
   const viewProjectsButton = document.querySelector("#view-projects");
 
-if (viewProjectsButton) {
-  viewProjectsButton.addEventListener("click", (event) => {
-    event.preventDefault();
+  if (viewProjectsButton) {
+    viewProjectsButton.addEventListener("click", (event) => {
+      event.preventDefault();
 
-    if (isAnimating) {
-      return;
-    }
+      if (isAnimating) {
+        return;
+      }
 
-    goToSection(3);
-  });
-}
+      goToSection(3);
+    });
+  }
   const scrollButtons = document.querySelectorAll(".scroll-down");
 
   const reloadButton = document.querySelector(".reload_btn");
@@ -117,6 +117,14 @@ headerButtons.forEach((button) => {
     goToSection(targetIndex);
   });
 });
+
+function updateActiveNav(index) {
+  headerButtons.forEach((button) => {
+    const buttonIndex = Number(button.dataset.section);
+
+    button.classList.toggle("active", buttonIndex === index);
+  });
+}
 
 function goToSection(index) {
   if (index < 0 || index >= sections.length) {
@@ -243,6 +251,7 @@ function goToSection(index) {
 
     currentIndex = index;
     isAnimating = false;
+    updateActiveNav(currentIndex);
   }, 800);
 }
 

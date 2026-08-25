@@ -240,6 +240,10 @@ section {
 
   text-shadow: 4px 7px 10px rgba(178, 212, 255, 0.423);
 }
+.list_item.active {
+  color: #4aaaf9;
+  text-shadow: 4px 7px 10px rgba(178, 212, 255, 0.423);
+}
 
 .list_item::after {
   content: "";
