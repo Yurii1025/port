@@ -412,7 +412,8 @@ export default class HeroSphere {
     this.heroPosition = { x: 3.6, y: 0.0 };
     this.aboutPosition = { x: -2.8, y: -0.2 };
     this.skillsPosition = { x: 3.1, y: -0.15 };
-    this.worksPosition = { x: 0.27, y: -2.45 };
+    // this.worksPosition = { x: 0.27, y: -2.45 };
+    this.worksPosition = { x: 0.0, y: -2.46 };
 
     // текущая и целевая позиции
     this.currentX = this.heroPosition.x;
