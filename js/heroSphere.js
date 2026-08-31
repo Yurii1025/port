@@ -415,12 +415,65 @@ export default class HeroSphere {
     // this.worksPosition = { x: 0.27, y: -2.45 };
     this.worksPosition = { x: 0.0, y: -2.46 };
 
-    // текущая и целевая позиции
-    this.currentX = this.heroPosition.x;
-    this.currentY = this.heroPosition.y;
+    this.portraitPosition = {
+      x: 0.0,
+      y: 0.0,
+    };
 
-    this.targetX = this.heroPosition.x;
-    this.targetY = this.heroPosition.y;
+    // responsive
+    this.isPortrait = () =>
+      window.matchMedia("(orientation: portrait) and (max-width: 1024px)")
+        .matches;
+
+    // текущее состояние сцены
+    this.currentLayout = "hero";
+
+    // // текущая и целевая позиции
+    // this.currentX = this.heroPosition.x;
+    // this.currentY = this.heroPosition.y;
+
+    // this.targetX = this.heroPosition.x;
+    // this.targetY = this.heroPosition.y;
+    // текущая и целевая позиции
+    if (this.isPortrait()) {
+      this.currentX = this.portraitPosition.x;
+      this.currentY = this.portraitPosition.y;
+
+      this.targetX = this.portraitPosition.x;
+      this.targetY = this.portraitPosition.y;
+    } else {
+      this.currentX = this.heroPosition.x;
+      this.currentY = this.heroPosition.y;
+
+      this.targetX = this.heroPosition.x;
+      this.targetY = this.heroPosition.y;
+    }
+
+    // отслеживаем изменение ориентации
+    this.lastPortraitState = this.isPortrait();
+
+    window.addEventListener("resize", () => {
+      const portrait = this.isPortrait();
+
+      // Если режим не изменился — ничего не делаем
+      if (portrait === this.lastPortraitState) {
+        return;
+      }
+
+      this.lastPortraitState = portrait;
+
+      if (portrait) {
+        // Переходим в центр
+        this.targetX = 0;
+        this.targetY = 0;
+      } else {
+        // // Возвращаем desktop-позицию Home
+        // this.targetX = this.heroPosition.x;
+        // this.targetY = this.heroPosition.y;
+        // Возвращаем позицию текущей секции
+        this.restoreCurrentPosition();
+      }
+    });
 
     this.group.scale.setScalar(1.18);
     this.targetScale = 1.18;
@@ -455,8 +508,60 @@ export default class HeroSphere {
   onLeave() {
     this.targetHover = 0;
   }
+  /*Portrait layout*/
+  setResponsivePosition(position) {
+    if (this.isPortrait()) {
+      this.targetX = 0;
+      this.targetY = 0;
+    } else {
+      this.targetX = position.x;
+      this.targetY = position.y;
+    }
+  }
 
+  restoreCurrentPosition() {
+    switch (this.currentLayout) {
+      case "hero":
+        this.targetX = this.heroPosition.x;
+        this.targetY = this.heroPosition.y;
+        break;
+
+      case "about":
+        this.targetX = this.aboutPosition.x;
+        this.targetY = this.aboutPosition.y;
+        break;
+
+      case "skills":
+        this.targetX = this.skillsPosition.x;
+        this.targetY = this.skillsPosition.y;
+        break;
+
+      case "works":
+        this.targetX = this.worksPosition.x;
+        this.targetY = this.worksPosition.y;
+        break;
+
+      case "blackhole":
+        this.targetX = 0;
+        this.targetY = 0;
+        break;
+    }
+  }
+
+  // toSphere() {
+  //   this.targetMorph = 0;
+  //   this.targetSolar = 0;
+  //   this.targetSun = 0;
+  //   this.targetBlackHole = 0;
+
+  //   this.targetScale = 1.08;
+
+  //   this.targetX = this.heroPosition.x;
+  //   this.targetY = this.heroPosition.y;
+  // }
   toSphere() {
+    this.currentLayout = "hero";
+
     this.targetMorph = 0;
     this.targetSolar = 0;
     this.targetSun = 0;
@@ -464,11 +569,23 @@ export default class HeroSphere {
 
     this.targetScale = 1.08;
 
-    this.targetX = this.heroPosition.x;
-    this.targetY = this.heroPosition.y;
+    this.setResponsivePosition(this.heroPosition);
   }
 
+  // toNetwork() {
+  //   this.targetMorph = 1;
+  //   this.targetSolar = 0;
+  //   this.targetSun = 0;
+  //   this.targetBlackHole = 0;
+
+  //   this.targetScale = 0.82;
+
+  //   this.targetX = this.aboutPosition.x;
+  //   this.targetY = this.aboutPosition.y;
+  // }
   toNetwork() {
+    this.currentLayout = "about";
+
     this.targetMorph = 1;
     this.targetSolar = 0;
     this.targetSun = 0;
@@ -476,10 +593,22 @@ export default class HeroSphere {
 
     this.targetScale = 0.82;
 
-    this.targetX = this.aboutPosition.x;
-    this.targetY = this.aboutPosition.y;
+    this.setResponsivePosition(this.aboutPosition);
   }
+  // toSolarSystem() {
+  //   this.targetMorph = 1;
+  //   this.targetSun = 0;
+  //   this.targetBlackHole = 0;
+  //   this.targetSolar = 1;
+
+  //   this.targetScale = 0.75;
+
+  //   this.targetX = this.skillsPosition.x;
+  //   this.targetY = this.skillsPosition.y;
+  // }
   toSolarSystem() {
+    this.currentLayout = "skills";
+
     this.targetMorph = 1;
     this.targetSun = 0;
     this.targetBlackHole = 0;
@@ -487,11 +616,23 @@ export default class HeroSphere {
 
     this.targetScale = 0.75;
 
-    this.targetX = this.skillsPosition.x;
-    this.targetY = this.skillsPosition.y;
+    this.setResponsivePosition(this.skillsPosition);
   }
 
+  // toSun() {
+  //   this.targetMorph = 1;
+  //   this.targetSolar = 1;
+  //   this.targetSun = 1;
+  //   this.targetBlackHole = 0;
+
+  //   this.targetScale = 0.42;
+
+  //   this.targetX = this.worksPosition.x;
+  //   this.targetY = this.worksPosition.y;
+  // }
   toSun() {
+    this.currentLayout = "works";
+
     this.targetMorph = 1;
     this.targetSolar = 1;
     this.targetSun = 1;
@@ -499,11 +640,12 @@ export default class HeroSphere {
 
     this.targetScale = 0.42;
 
-    this.targetX = this.worksPosition.x;
-    this.targetY = this.worksPosition.y;
+    this.setResponsivePosition(this.worksPosition);
   }
 
   toBlackHole() {
+    this.currentLayout = "blackhole";
+
     this.targetSolar = 1;
     this.targetSun = 1;
     this.targetBlackHole = 1;
@@ -546,11 +688,18 @@ export default class HeroSphere {
       // this.currentY += (targetY - this.currentY) * 0.025;
 
       // небольшое следование за героем только на первом экране
-      const heroFollowX = x * 0.6;
-      const heroFollowY = y * 0.4;
+      // const heroFollowX = x * 0.6;
+      // const heroFollowY = y * 0.4;
 
-      // итоговая цель
+      // // итоговая цель
+      // const targetX = this.targetX + heroFollowX * (1 - this.morphProgress);
+      // const targetY = this.targetY + heroFollowY * (1 - this.morphProgress);
+
+      const heroFollowX = this.isPortrait() ? 0 : x * 0.6;
+      const heroFollowY = this.isPortrait() ? 0 : y * 0.4;
+
       const targetX = this.targetX + heroFollowX * (1 - this.morphProgress);
+
       const targetY = this.targetY + heroFollowY * (1 - this.morphProgress);
 
       // плавное движение

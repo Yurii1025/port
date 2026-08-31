@@ -1327,6 +1327,8 @@ margin-left: 40px;
 .certs_container {
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  text-align: center;
   column-gap: 10px;
 }
 .cert_item {
@@ -1944,4 +1946,35 @@ h3,
   .projects_container {
     max-width: 100%;
   }
+}
+
+@media (max-width: 1030px) {
+  /*HEADER*/
+  .header {
+    top: 5px;
+  }
+  /*2 page*/
+  .journey {
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 15px;
+  }
+  .bt-1 {
+    font-size: 14px;
+  }
+  .bt-2 {
+    font-size: 14px;
+  }
+
+  /*3 page*/
+  .skills_text {
+    font-size: 15px;
+  }
+  .skils_item {
+    padding: 10px 5px 5px 5px;
+  }
+  .cert_item {
+    font-size: 14px;
+  }
+
 }
