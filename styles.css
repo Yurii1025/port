@@ -1436,6 +1436,7 @@ margin-left: 40px;
   display: flex;
   flex-direction: row;
   column-gap: 15px;
+  row-gap: 15px;
 }
 .p_card-container {
   display: flex;
@@ -1494,7 +1495,7 @@ margin-left: 40px;
   color: #fff;
   margin-bottom: 8px;
 }
-.p_text {
+.pre_text {
   color: #b2b2b2;
   font-size: 12px;
   margin-bottom: 8px;
@@ -1977,4 +1978,109 @@ h3,
     font-size: 14px;
   }
 
+  /*4 page*/
+  .projects_cont {
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+  }
+  .preview {
+    display: none;
+  }
+  .p_label {
+    display: none;
+  }
+  .p_header {
+    margin-top: 7px;
+    text-align: center;
+  }
+
+}
+
+/*Portrait layout*/
+@media (orientation: portrait) and (max-width: 1024px) {
+  /*HERO*/
+  .hero {
+    justify-content: center;
+    /* align-items: center; */
+    /* width: 100%; */
+  }
+  .hero_container {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+  .hero_tech {
+    justify-content: space-around;
+  }
+  .hero_tech_inn {
+    display: none;
+  }
+
+  /*ABOUT*/
+  .about_container {
+    width: 100%;
+  }
+
+  /*SKILLS*/
+  .skills_container  {
+    width: 100%;
+  }
+
+}
+
+@media (orientation: portrait) and (max-width: 565px) {
+  /*HERO*/
+  .hero {
+    padding-left: 0;
+  }
+
+  /*ABOUT*/
+  .about-item {
+    padding-right: 0;
+  }
+  .hero_container {
+    padding: 20px 15px 15px 20px;
+  }
+
+  /*SKILLS*/
+  .skills-item {
+    padding-left: 0;
+  }
+  .skils_item {
+    width: 75px;
+    height: 110px;
+    padding: 5px;
+  }
+  .skill_level {
+    top: 10px;
+    margin-bottom: 5px;
+  }
+  .skils_description {
+    display: none;
+  }
+  .skils_info {
+    display: none;
+  }
+
+  /*PROJECTS*/
+  .projects {
+    padding-top: 60px;
+  }
+  .pre_text {
+    display: none;
+  }
+}
+
+@media (orientation: portrait) and (max-width: 460px) {
+  /*WORKS*/
+  .p_header {
+    font-size: 14px;
+  }
+  .projects_tech {
+    font-size: 10px;
+  }
+  .p_text {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
 }
