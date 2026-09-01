@@ -2033,6 +2033,9 @@ h3,
   .hero {
     padding-left: 0;
   }
+  .scroll-down {
+    bottom: 10px;
+  }
 
   /*ABOUT*/
   .about-item {
@@ -2072,6 +2075,82 @@ h3,
 }
 
 @media (orientation: portrait) and (max-width: 460px) {
+  /*HOME*/
+  .top_hello {
+    margin-bottom: 15px;
+  }
+  .top_name {
+    font-size: 40px;
+  }
+  .top_frontend {
+    font-size: 20px;
+  }
+  .hero_text {
+    font-size: 14px;
+  }
+  .hero_buttons {
+    margin-bottom: 15px;
+  }
+  .btn-primary {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+  .btn-secondary {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+
+  /*ABOUT*/
+  .top_head1 {
+    font-size: 20px;
+  }
+  .top_head2 {
+    font-size: 20px;
+  }
+  .about_text2 {
+    font-size: 12px;
+  }
+  .bot_item {
+    padding-bottom: 10px;
+  }
+  .bot_icon_container {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+  }
+  .bot_item:not(:last-child)::after {
+  left: 22px; /* центр круга 54px */
+  top: 48px; /* сразу под кругом */
+
+  width: 1px;
+  height: 14px; /* фиксированная длина */
+
+  background: linear-gradient(
+    to bottom,
+    rgba(110, 168, 255, 0.35),
+    rgba(110, 168, 255, 0.08)
+  );
+}
+  .bt-1 {
+    font-size: 12px;
+  }
+  .bt-2 {
+    font-size: 12px;
+  }
+
+  /*SKILLS*/
+  .skils_item {
+    height: 90px;
+  }
+   .skills_text {
+    font-size: 12px;
+   }
+   .skils_icon {
+    margin-top: 10px;
+    height: 46px;
+    min-width: 46px;
+   }
+
   /*WORKS*/
   .p_header {
     font-size: 14px;
@@ -2079,8 +2158,14 @@ h3,
   .projects_tech {
     font-size: 10px;
   }
+  .p_tech_container {
+    display: none;
+  }
   .p_text {
     font-size: 12px;
     margin-bottom: 10px;
+  }
+  .links_container {
+    margin-top: 12px;
   }
 }
